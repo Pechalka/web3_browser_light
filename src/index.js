@@ -22,6 +22,7 @@ ReactDOM.render(
           <Route path='/^:app/:path' component={ Browser } />
           <Route path='/^:app' component={ Browser } />
           <IndexRoute component={ Browser } />
+          <Route path='*' exact={true} component={Apps} />
         </Route>
     </Router>
 , document.getElementById('root'));

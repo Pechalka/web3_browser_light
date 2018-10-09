@@ -7,33 +7,53 @@ import { URLToDURA, DURAToURL } from './utils';
 
 let eventNavigation = false;
 
+let apps = {};
+let IPFS_END_POINT;
+
+// MOVE input in application, use redux for state managment, proccess loading
+
 class Browser extends Component {
   constructor(props, context) {
     super(props, context);
     console.log(' props ', props);
 
     this.state = {
-      apps: {},
-      loading: false,
-      IPFS_END_POINT: null,
+      dura: '',
+      url: DURAToURL('')
     };
   }
   
   componentDidMount() {
-    eventNavigation = true;
-    const { params } = this.props;
-
     Promise.all([
       getApps(),
       getSettings('IPFS_END_POINT')
-    ]).then(([apps, IPFS_END_POINT])=> {
-      this.setState({ 
-        apps: { ...apps },
-        IPFS_END_POINT
-      }, () => {
-        this.forceUpdate();
-        this.refs.input.value = this.generateInput();
-      });
+    ]).then(([_apps, _IPFS_END_POINT]) => {
+      apps = _apps;
+      IPFS_END_POINT = _IPFS_END_POINT;
+
+      const dura = localStorage.getItem('LAST_DURA')||'';
+      this.navigate(dura);
+    })
+
+  }
+
+  updateDURA(dura) {
+    this.refs.input.value = dura;
+    localStorage.setItem('LAST_DURA', dura);    
+  }
+
+  navigate(_dura) {
+    const { url, dura } = DURAToURL(_dura, apps, IPFS_END_POINT)
+    console.log('navigate');
+    console.log('dura', dura);
+    console.log('url', url);
+    console.log('');
+
+    this.updateDURA(dura);
+
+    this.setState({
+      url,
+      dura
     })
 
   }
@@ -42,66 +62,19 @@ class Browser extends Component {
     if (e.key === 'Enter') {
       const value = this.refs.input.value;
 
-      let newUrl = null;
-
-      if (value === '') {
-        newUrl = '/';
-        this.props.router.push(newUrl); 
-        return;
-      }
-
       if (value === 'apps.cyb') {
-        newUrl = '/apps';
-        this.props.router.push(newUrl); 
+        this.props.router.push('/apps'); 
         return;
       }
 
       if (value === 'settings.cyb') {
-        newUrl = '/settings';
-        this.props.router.push(newUrl); 
+        this.props.router.push('/settings'); 
         return;
       }
 
-      if (value.indexOf('.') !== -1) {
-        const contentid = value.split('.')[0];
-        const appName = value.split('.')[1] || 'cyber';
-
-        newUrl = `/${contentid || ''}^${appName}`;
-      } else {
-        const contentid = value;
-        const appName = 'cyber';
-
-        newUrl = `/${contentid || ''}^${appName}`;
-      }
-
-      if (newUrl) {
-        console.log('navigate to ', newUrl);
-        eventNavigation = false;
-        this.props.router.push(newUrl);     
-      }
+      this.navigate(value)
     }
   }
-
-    componentDidUpdate(prevProps, prevState) {
-        this.refs.input.value = this.generateInput();   
-    }
-
-    shouldComponentUpdate(nextProps, nextState) {
-      const urlChange = nextProps.params.q !== this.props.params.q ||
-        nextProps.params.app !== this.props.params.app ||
-        nextProps.params.path !== this.props.params.path;
-
-      if (urlChange) {
-
-        // TODO: fix rerender 
-        // console.log('shouldComponentUpdate', !eventNavigation);
-        // return !eventNavigation;
-
-        return true;
-      }
-
-      return false;
-    }
 
   
   handleWebview = webview => {
@@ -111,46 +84,40 @@ class Browser extends Component {
 
 
     webview.addEventListener('did-navigate-in-page', (e) => {
-          console.log('did-navigate-in-page ', e.url);
+        const url = e.url;
+        const dura = URLToDURA(url, apps, IPFS_END_POINT);
+        console.log('did-navigate-in-page ');
+        console.log('url', url);
+        console.log('dura', dura);
 
-          const { q, app, path } = URLToDURA(e.url, this.state.apps);
-          const newUrl = `/${q || ''}^${app}${path ? '/' + path : ''}`;
-          eventNavigation = true;
-          this.props.router.push(newUrl);   
-          const inputText = this.generateInput();
-          this.refs.input.value = inputText;
-
-    });
-
-    webview.addEventListener('will-navigate', event => {
-      console.log('will-navigate ', event.url)
-      if (event.url.indexOf('cyb://') !== -1) {
-        event.preventDefault();
-        const appName = event.url.split('cyb://')[1].replace('.', '^');
-
-        this.props.router.push(appName);
-      } else {
-        
-      }
-    });
-  }
-
-
-  generateInput = (state) => {
-    const { q, app, path } = this.props.params;
+        e.preventDefault();
     
-    console.log('generateInput', this.props.params)
+        this.updateDURA(dura);
+    });
 
-    if (!app) return '';
+    webview.addEventListener('will-navigate', event => {      
+      const url = event.url;
+      let dura = URLToDURA(url, apps, IPFS_END_POINT);
 
-    return `${q || ''}.${app}${path ? '/' + path : ''}`
+      if (url.indexOf('cyb://')!==-1) {
+        dura = url.split('cyb://')[1]
+      } 
+
+      console.log('will-navigate');
+      console.log('url', url);
+      console.log('dura', dura);
+      console.log('');
+
+      event.preventDefault();
+      this.navigate(dura);        
+
+
+    });
   }
+
 
   render() {
-    const { loading, apps, IPFS_END_POINT } = this.state;
-    const src = DURAToURL(this.props.params, apps, IPFS_END_POINT)
-    console.log('render', src);
-    console.log('');
+    const { url, dura, loading } = this.state;
 
     return (
       <div className='app'>
@@ -158,12 +125,12 @@ class Browser extends Component {
           <input 
             className='input'
             ref='input'
-            defaultValue={this.generateInput()}
+            defaultValue={dura}
             onKeyPress={this._handleKeyPress}
           />
         </div>
         <webview 
-          src={src} 
+          src={url} 
           ref={ this.handleWebview }
           className={`app__content ${loading ? 'app__content--hidden' : ''}`}
         />
