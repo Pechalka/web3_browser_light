@@ -1,24 +1,28 @@
 {
   "name": "browser",
-  "version": "0.1.0",
+  "version": "0.0.1",
   "main": "public/electron.js",
   "private": true,
+
+  "homepage": "./",
   "dependencies": {
     "electron-is-dev": "^1.0.1",
-    "react": "^16.5.2",
-    "react-dom": "^16.5.2",
-    "react-redux": "^5.0.7",
+    "react": "16.5.2",
+    "react-dom": "16.5.2",
+    "react-redux": "5.0.7",
     "react-router": "3.2.0",
     "react-scripts": "2.0.4",
-    "redux": "^4.0.0",
-    "redux-thunk": "^2.3.0"
+    "redux": "4.0.0",
+    "redux-thunk": "2.3.0"
   },
   "scripts": {
     "start": "react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",
+    "release": "electron-builder --config electron/config.json",
     "electron-dev": "concurrently \"BROWSER=none yarn start\" \"wait-on http://localhost:3000 && electron .\""
   },
+
   "eslintConfig": {
     "extends": "react-app"
   },
@@ -29,9 +33,9 @@
     "not op_mini all"
   ],
   "devDependencies": {
-    "concurrently": "^4.0.1",
-    "electron": "^3.0.2",
-    "electron-builder": "^20.28.4",
-    "wait-on": "^3.0.1"
+    "concurrently": "4.0.1",
+    "electron": "3.0.2",
+    "electron-builder": "20.28.4",
+    "wait-on": "3.0.1"
   }
 }
