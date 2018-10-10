@@ -5,6 +5,8 @@ import * as actions from './redux/browser';
 
 import CybLink from './components/CybLink';
 
+//TODO: wallet, fix nav bar css
+
 class Application extends Component {
 	_handleKeyPress = (e) => {
 	    if (e.key === 'Enter') {

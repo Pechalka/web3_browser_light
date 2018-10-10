@@ -6,6 +6,7 @@ import { getSettings } from './store';
 import { connect } from "react-redux";
 import * as actions from './redux/browser';
 
+//TODO: inject web3 provider, procces loading, correct processs cid 1.help
 
 class Browser extends Component {
   

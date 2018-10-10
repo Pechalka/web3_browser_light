@@ -3,7 +3,7 @@ import { URLToDURA, DURAToURL } from '../utils';
 import { getApps, getSettings } from '../store';
 import { hashHistory } from 'react-router';
 
-// MOVE proccess loading, home page, rewrite all to reudx
+//TODO: proccess loading
 
 let apps = {};
 let IPFS_END_POINT;

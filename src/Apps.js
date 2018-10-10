@@ -4,6 +4,9 @@ import { Link } from 'react-router';
 
 import { getApps, AddApp } from './store';
 
+//TODO: 5000.dev => localhost:5000 with hot reloeader, redux
+
+
 class Apps extends Component {
 	state = {
 		apps: []

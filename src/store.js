@@ -1,4 +1,4 @@
-
+// TODO: rewrite all to reudx, save data in ls
 const state = {
 	'help': {
 		hash: 'QmT26rKxQdkD6XruyN8J3LDkRxWy6ZAjeYabfQUe9GssGf',
