@@ -1,31 +1,33 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import './index.css';
+
+import Application from './Application';
 import Browser from './Browser';
 import Apps from './Apps';
 import Settings from './Settings';
+import Home from './Home';
 
 import { Provider } from "react-redux";
-
-import Application from './Application';
+import store from './redux/store';
+import { init } from './redux/browser';
 
 import { IndexRoute, Route, Router, hashHistory } from 'react-router';
 
-import store from './redux/store';
 
 ReactDOM.render(
   <Provider store={store}>
-	<Router history={ hashHistory }>
-        <Route path='/' component={ Application }>
-          <Route path='/apps' component={ Apps } />
-          <Route path='/settings' component={ Settings } />
-          <Route path='/:q^:app/:path' component={ Browser } />
-          <Route path='/:q^:app' component={ Browser } />
-          <Route path='/^:app/:path' component={ Browser } />
-          <Route path='/^:app' component={ Browser } />
-          <IndexRoute component={ Browser } />
-          <Route path='*' exact={true} component={Apps} />
-        </Route>
-    </Router>
+  	<Router history={ hashHistory }>
+          <Route path='/' component={ Application }>
+            <Route path='/apps' component={ Apps } />
+            <Route path='/settings' component={ Settings } />
+            <Route path='/browser' component={ Browser } />
+            <IndexRoute component={ Home } />
+            <Route path='*' exact={true} component={Apps} />
+          </Route>
+      </Router>
     </Provider>
 , document.getElementById('root'));
+
+
+store.dispatch(init());

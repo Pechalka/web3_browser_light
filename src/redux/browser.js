@@ -1,8 +1,9 @@
 
 import { URLToDURA, DURAToURL } from '../utils';
 import { getApps, getSettings } from '../store';
+import { hashHistory } from 'react-router';
 
-// MOVE input in application, use redux for state managment, proccess loading
+// MOVE proccess loading, home page, rewrite all to reudx
 
 let apps = {};
 let IPFS_END_POINT;
@@ -46,18 +47,40 @@ export const init = () => (dispatch, getState) => {
 
       const dura = localStorage.getItem('LAST_DURA')||'';
 
-      dispatch(navigate(dura))
+      dispatch(navigate(dura, true))
     })
 }
 
-export const navigate = (_dura) => (dispatch, getState) => {
+export const navigate = (_dura, init = false) => (dispatch, getState) => {
 	const { url, dura } = DURAToURL(_dura, apps, IPFS_END_POINT)
+  if (_dura === 'apps.cyb') {
+    if (!init)
+      hashHistory.push('/apps');
+    dispatch(updateDURA(_dura));
+    return;
+  }
+
+  if (_dura === 'settings.cyb') {
+    if (!init)
+      hashHistory.push('/settings');
+    dispatch(updateDURA(_dura));
+    return;
+  }
+
+  if (_dura === '') {
+    if (!init)
+      hashHistory.push('/');
+    dispatch(updateDURA(_dura));
+    return;
+  }
+
     console.log('navigate');
     console.log('dura', dura);
     console.log('url', url);
     console.log('');
 
     dispatch(updateDURA(dura));
+ 
 
     dispatch({
     	type: 'NAVIGATE',
@@ -66,7 +89,9 @@ export const navigate = (_dura) => (dispatch, getState) => {
 	      dura,
 	      loading: false
 	    }
-	})
+	 })
+    if (!init)
+    hashHistory.push('/browser');
 }
 
 export const willNavigate = (url) => (dispatch, getState) => {

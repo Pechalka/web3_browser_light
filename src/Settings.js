@@ -1,8 +1,5 @@
 import React, { Component } from 'react';
 
-import { Link } from 'react-router';
-
-
 import { getAllSettings, setSettings } from './store';
 
 class Settings extends Component {
@@ -34,7 +31,6 @@ class Settings extends Component {
 
 		return (
 			<div>
-				<Link to='/'>browser</Link>
 				<div>
 					<div>
 						<div>IPFS:</div>

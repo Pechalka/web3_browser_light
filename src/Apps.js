@@ -46,7 +46,6 @@ class Apps extends Component {
 		))
 		return (
 			<div>
-				<Link to='/'>browser</Link>
 				<div>
 					<table>
 						<thead>

@@ -27,7 +27,7 @@ body, html, #root, .applications {
 	flex-direction: column;
 }
 
-.app_navigation {
+.app__navigation {
 	margin: 10px;
 }
 
@@ -41,6 +41,7 @@ body, html, #root, .applications {
 
 .app__content {
 	flex: 1 auto;
+	height: 100%
 }
 
 
