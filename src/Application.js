@@ -7,7 +7,23 @@ import CybLink from './components/CybLink';
 
 //TODO: wallet, fix nav bar css
 
+const walletStore = require('./walletStore');
+
+let approvecalback;
 class Application extends Component {
+	state = {
+		pending: false
+	}
+
+	componentWillMount() {
+		walletStore.subscribe(this.showRequest)
+	}
+
+	showRequest = (_approvecalback) => {
+		approvecalback = _approvecalback;
+		this.setState({ pending: true })
+	}
+
 	_handleKeyPress = (e) => {
 	    if (e.key === 'Enter') {
 	      const value = this.refs.input.value;
@@ -21,8 +37,21 @@ class Application extends Component {
 	    }
   	} 
 
+  	approve = () => {
+  		if (approvecalback) {
+  			approvecalback();
+  		}
+  		this.setState({ pending: false })
+  	}
+
+  	reject = () => {
+  		this.setState({ pending: false })
+  	}
+
 	render() {
 		const { dura } = this.props;
+		const { pending } = this.state;
+
 		return (
 			<div className='applications'>
 				<div className='app'>
@@ -35,6 +64,13 @@ class Application extends Component {
 				            onKeyPress={this._handleKeyPress}
 				          />
 				          <CybLink dura='settings.cyb'>settings</CybLink>
+				          <div>
+				          	<CybLink dura='wallet.cyb'>Wallet</CybLink>
+				          	{pending && <div>
+				          		<button onClick={this.approve}>approve</button>
+				          		<button onClick={this.reject}>rejec</button>
+				          	</div>}
+				          </div>
 				    </div>
 				    <div className='app__content'>
 						{this.props.children}

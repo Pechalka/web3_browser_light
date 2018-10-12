@@ -7,6 +7,7 @@ import Browser from './Browser';
 import Apps from './Apps';
 import Settings from './Settings';
 import Home from './Home';
+import Wallet from './Wallet';
 
 import { Provider } from "react-redux";
 import store from './redux/store';
@@ -21,6 +22,7 @@ ReactDOM.render(
           <Route path='/' component={ Application }>
             <Route path='/apps' component={ Apps } />
             <Route path='/settings' component={ Settings } />
+            <Route path='/wallet' component={ Wallet } />
             <Route path='/browser' component={ Browser } />
             <IndexRoute component={ Home } />
             <Route path='*' exact={true} component={Apps} />

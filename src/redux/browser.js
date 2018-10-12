@@ -67,6 +67,13 @@ export const navigate = (_dura, init = false) => (dispatch, getState) => {
     return;
   }
 
+  if (_dura === 'wallet.cyb') {
+    if (!init)
+      hashHistory.push('/wallet');
+    dispatch(updateDURA(_dura));
+    return;
+  }
+
   if (_dura === '') {
     if (!init)
       hashHistory.push('/');

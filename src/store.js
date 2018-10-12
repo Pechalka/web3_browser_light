@@ -15,6 +15,10 @@ const state = {
 	'ewiki': {
 		hash: 'QmT5NvUtoM5nWFfrQdVrFtvGfKFmG7AHE8P34isapyhCxX',
 		protocol: 'ipfs'
+	},
+	'test': {
+		hash: 'Qma2CP6cRe8K6QExZ2MwGW5XYC76r9CZYxbbWEtnMzcZ6g',
+		protocol: 'ipfs'
 	}
 };
 

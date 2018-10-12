@@ -6,7 +6,8 @@ import { getSettings } from './store';
 import { connect } from "react-redux";
 import * as actions from './redux/browser';
 
-//TODO: inject web3 provider, procces loading, correct processs cid 1.help
+
+const walletStore = require('./walletStore');
 
 class Browser extends Component {
   
@@ -24,13 +25,26 @@ class Browser extends Component {
       event.preventDefault();
       this.props.willNavigate(event.url);      
     });
+
+    webview.addEventListener('console-message', e => {
+      console.log('[DAPP]', e.message);
+    });
+
+    webview.addEventListener('ipc-message', (e) => {
+      walletStore.receiveMessage(e);
+    });
   } 
 
+
   render() {
-    const { url, dura, loading } = this.props;
+    const { dura, loading } = this.props;
+    // const url = 'http://localhost:5600/';
+    const { url } = this.props;
+
     return (
       <div className='app'>
         <webview 
+          preload={'file:///users/andrey/projects/electron/browser/src/preload.js'}
           src={url} 
           ref={ this.handleWebview }
           className={`app__content ${loading ? 'app__content--hidden' : ''}`}
