@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import { connect } from "react-redux";
 import * as actions from './redux/browser';
 
+import { getSettings } from './store';
 
 import CybLink from './components/CybLink';
 
@@ -17,6 +18,12 @@ class Application extends Component {
 
 	componentWillMount() {
 		walletStore.subscribe(this.showRequest)
+		walletStore.init('http://localhost:8545');
+
+		getSettings('PARITTY_END_POINT').then(PARITTY_END_POINT => {
+			walletStore.subscribe(this.showRequest)
+			walletStore.init(PARITTY_END_POINT);			
+		});
 	}
 
 	showRequest = (_approvecalback) => {

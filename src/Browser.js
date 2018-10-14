@@ -5,9 +5,38 @@ import { getSettings } from './store';
 
 import { connect } from "react-redux";
 import * as actions from './redux/browser';
+import path from 'path';
+import isElectron from 'is-electron';
+const isDev = window.require('electron-is-dev');
 
+const { remote } = window.require('electron');
 
 const walletStore = require('./walletStore');
+
+function getPreloaddPath () {
+  // // Condition necessary for store.spec.js
+  // const basePath = remote.app.getPath('userData');
+
+  // // Replace all backslashes by front-slashes (happens in Windows)
+  // // Note: `dirName` contains backslashes in Windows. One would assume that
+  // // path.join in Windows would handle everything for us, but after some time
+  // // I realized that even in Windows path.join here bahaves like POSIX (maybe
+  // // it's electron, maybe browser env?). Switching to '/'. -Amaury 12.03.2018
+  // const posixDirName = basePath.replace(/\\/g, '/');
+  // const buildPath = path.join(
+  //   posixDirName,
+  //   '..',
+  //   '.build');
+
+  // return buildPath;
+
+  console.log('>>> ', remote.getGlobal('dirname'));
+
+  if (isDev) 
+    return 'file://' + path.join(remote.app.getAppPath(), 'src', 'preload.js');
+
+  return 'file://' + path.join(remote.app.getAppPath(), './build/preload.js');  
+}
 
 class Browser extends Component {
   
@@ -44,7 +73,7 @@ class Browser extends Component {
     return (
       <div className='app'>
         <webview 
-          preload={'file:///users/andrey/projects/electron/browser/src/preload.js'}
+          preload={`${getPreloaddPath()}`}
           src={url} 
           ref={ this.handleWebview }
           className={`app__content ${loading ? 'app__content--hidden' : ''}`}

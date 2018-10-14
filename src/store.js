@@ -24,7 +24,7 @@ const state = {
 
 const settings = {
 	IPFS_END_POINT: 'http://earth.cybernode.ai:34402',
-	PARITTY_END_POINT: 'http://localhost:5600'
+	PARITTY_END_POINT: 'http://localhost:8545'
 }
 
 

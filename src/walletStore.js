@@ -11,22 +11,42 @@ let __accounts = {
 
 __accounts = JSON.parse(localStorage.getItem('accounts')||'{}');
 
-const provider = new SignerProvider('http://localhost:8545', {
-  signTransaction: (rawTx, cb) => {
-   const privateKey = __accounts[rawTx.from];
-   cb(null, sign(rawTx, privateKey))
-  },
-  accounts: (cb) => {
-   cb(null, Object.keys(__accounts))
-  },
-});
+// const provider = new SignerProvider('http://localhost:8545', {
+//   signTransaction: (rawTx, cb) => {
+//    const privateKey = __accounts[rawTx.from];
+//    cb(null, sign(rawTx, privateKey))
+//   },
+//   accounts: (cb) => {
+//    cb(null, Object.keys(__accounts))
+//   },
+// });
 
-let web3 = new Web3(provider);
-let eth = web3.eth;
+// let web3 = new Web3(provider);
+// let eth = web3.eth;
 
+let web3;
+let eth;
+let provider;
+
+export const init = (endpoint) => {
+	provider = new SignerProvider(endpoint, {
+	  signTransaction: (rawTx, cb) => {
+	   const privateKey = __accounts[rawTx.from];
+	   cb(null, sign(rawTx, privateKey))
+	  },
+	  accounts: (cb) => {
+	   cb(null, Object.keys(__accounts))
+	  },
+	});
+
+	web3 = new Web3(provider);
+	eth = web3.eth;
+}
 
 
 export const getAccounts = () => new Promise(resolve => {
+	if (!eth) return ;
+
 	eth.getAccounts((err, _accounts) => {
 		const accounts = _accounts.map(address => ({
 			address,
@@ -75,6 +95,7 @@ export const subscribe = (cb) => {
 
 export const receiveMessage =  (e) => {
 
+	if (!provider) return;
   if ( e.channel === 'web3_eth' ) {
     const payload = e.args[0]
     console.log('web3_eth ->', payload)
