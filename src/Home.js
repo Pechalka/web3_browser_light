@@ -7,7 +7,7 @@ class Home extends Component {
 	render() {
 		return (
 			<div>
-				<CybLink dura='apps.cyb'>app store</CybLink>				
+				<CybLink dura='root.cyb'>Root registry</CybLink>
 			</div>
 		);
 	}

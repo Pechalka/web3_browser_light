@@ -2,9 +2,6 @@ import path from "path";
 
 export const URLToDURA = (url, apps, IPFS_END_POINT = '') => {
 
-    // const parts = url.split(/ipfs\/|ipns|#\/|\/\?query=/);
-    // console.log(parts)
-
     let hash;
     let path = '';
     let q = '';
@@ -24,30 +21,6 @@ export const URLToDURA = (url, apps, IPFS_END_POINT = '') => {
 
 
     }
-
-
-    // console.log(hash, path)
-
-    // const hash = parts[1];
-    // let q = parts[2];
-    // let path = parts[3];
-
-    // let app = 'ipfs';
-
-    // let find = false;
-    // Object.keys(apps).forEach(key => {
-    // 	if (apps[key].hash === hash) {
-    // 		app = key;
-    // 		find = true;
-    // 	}
-    // })
-
-    // if (!find) {
-    // 	q = hash;
-    // }
-
-
-    // return { app, q, path };
 
     return `${q}.${app}${path}`;
 }

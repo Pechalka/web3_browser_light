@@ -4,7 +4,7 @@ import './index.css';
 
 import Application from './Application';
 import Browser from './Browser';
-import Apps from './Apps';
+import RootRegistry from './RootRegistry';
 import Settings from './Settings';
 import Home from './Home';
 import Wallet from './Wallet';
@@ -19,12 +19,12 @@ ReactDOM.render(
   <Provider store={store}>
   	<Router history={ hashHistory }>
           <Route path='/' component={ Application }>
-            <Route path='/apps' component={ Apps } />
+            <Route path='/rootregistry' component={ RootRegistry } />
             <Route path='/settings' component={ Settings } />
             <Route path='/wallet' component={ Wallet } />
             <Route path='/browser' component={ Browser } />
             <IndexRoute component={ Home } />
-            <Route path='*' exact={true} component={Apps} />
+            <Route path='*' exact={true} component={RootRegistry} />
           </Route>
       </Router>
     </Provider>

@@ -1,86 +1,73 @@
-
-import { URLToDURA, DURAToURL } from '../utils';
-import { getApps } from '../store';
-import { hashHistory } from 'react-router';
+import {URLToDURA, DURAToURL} from '../utils';
+import {getRegistryItems} from './rootRegistry';
+import {hashHistory} from 'react-router';
+import {getIpfsEndpoint} from "./settings";
 
 //TODO: proccess loading
-
-let apps = {};
-let IPFS_END_POINT;
-
 
 const START_DURA = '';
 
 const initState = {
-	url: DURAToURL(START_DURA).url,
-	dura: START_DURA,
-	loading: false
+    url: DURAToURL(START_DURA).url,
+    dura: START_DURA,
+    loading: false
 }
 
-
 export const reducer = (state = initState, action) => {
-	switch(action.type) {
-		case 'NAVIGATE': {
-			return {
-				...state,
-				...action.payload
-			}
-		}
-		case 'UPDATE_DURA': {
-			return {
-				...state,
-				dura: action.payload
-			}
-		}
-		default:
-			return state;
-	}
+    switch (action.type) {
+        case 'NAVIGATE': {
+            return {
+                ...state,
+                ...action.payload
+            }
+        }
+        case 'UPDATE_DURA': {
+            return {
+                ...state,
+                dura: action.payload
+            }
+        }
+        default:
+            return state;
+    }
 }
 
 export const init = (_IPFS_END_POINT) => (dispatch, getState) => {
-	Promise.all([
-      getApps()
-    ]).then(([_apps]) => {
-      apps = _apps;
-      IPFS_END_POINT = _IPFS_END_POINT;
-
-      const dura = localStorage.getItem('LAST_DURA')||'';
-
-      dispatch(navigate(dura, true))
-    })
+    const dura = localStorage.getItem('LAST_DURA') || '';
+    dispatch(navigate(dura, true))
 }
 
-
-
 export const navigate = (_dura, init = false) => (dispatch, getState) => {
-	const { url, dura } = DURAToURL(_dura, apps, IPFS_END_POINT)
-  if (_dura === 'apps.cyb') {
-    if (!init)
-      hashHistory.push('/apps');
-    dispatch(updateDURA(_dura));
-    return;
-  }
+    const apps = getRegistryItems(getState());
+    const ipfsEndpoint = getIpfsEndpoint(getState());
+    const {url, dura} = DURAToURL(_dura, apps, ipfsEndpoint);
+    if (_dura === 'root.cyb') {
+        if (!init)
+            hashHistory.push('/rootregistry');
+        dispatch(updateDURA(_dura));
+        return;
+    }
 
-  if (_dura === 'settings.cyb') {
-    if (!init)
-      hashHistory.push('/settings');
-    dispatch(updateDURA(_dura));
-    return;
-  }
+    if (_dura === 'settings.cyb') {
+        if (!init)
+            hashHistory.push('/settings');
+        dispatch(updateDURA(_dura));
+        return;
+    }
 
-  if (_dura === 'wallet.cyb') {
-    if (!init)
-      hashHistory.push('/wallet');
-    dispatch(updateDURA(_dura));
-    return;
-  }
+    if (_dura === 'wallet.cyb') {
+        if (!init)
+            hashHistory.push('/wallet');
+        dispatch(updateDURA(_dura));
+        return;
+    }
 
-  if (_dura === '') {
-    if (!init)
-      hashHistory.push('/');
-    dispatch(updateDURA(_dura));
-    return;
-  }
+    if (_dura === '') {
+        if (!init)
+            hashHistory.push('/');
+        dispatch(updateDURA(_dura));
+        return;
+    }
 
     console.log('navigate');
     console.log('dura', dura);
@@ -88,37 +75,43 @@ export const navigate = (_dura, init = false) => (dispatch, getState) => {
     console.log('');
 
     dispatch(updateDURA(dura));
- 
+
 
     dispatch({
-    	type: 'NAVIGATE',
-    	payload: {
-	      url,
-	      dura,
-	      loading: false
-	    }
-	 })
+        type: 'NAVIGATE',
+        payload: {
+            url,
+            dura,
+            loading: false
+        }
+    })
     if (!init)
-    hashHistory.push('/browser');
+        hashHistory.push('/browser');
 }
 
 export const willNavigate = (url) => (dispatch, getState) => {
-  let dura = URLToDURA(url, apps, IPFS_END_POINT);
+    const apps = getRegistryItems(getState());
+    const ipfsEndpoint = getIpfsEndpoint(getState());
 
-  if (url.indexOf('cyb://')!==-1) {
-    dura = url.split('cyb://')[1]
-  } 
+    let dura = URLToDURA(url, apps, ipfsEndpoint);
 
-  console.log('will-navigate');
-  console.log('url', url);
-  console.log('dura', dura);
-  console.log('');
+    if (url.indexOf('cyb://') !== -1) {
+        dura = url.split('cyb://')[1]
+    }
 
-  dispatch(navigate(dura));
+    console.log('will-navigate');
+    console.log('url', url);
+    console.log('dura', dura);
+    console.log('');
+
+    dispatch(navigate(dura));
 }
 
 export const didNavigateInPage = (url) => (dispatch, getState) => {
-    const dura = URLToDURA(url, apps, IPFS_END_POINT);
+    const apps = getRegistryItems(getState());
+    const ipfsEndpoint = getIpfsEndpoint(getState());
+
+    const dura = URLToDURA(url, apps, ipfsEndpoint);
     console.log('did-navigate-in-page ');
     console.log('url', url);
     console.log('dura', dura);
@@ -128,9 +121,9 @@ export const didNavigateInPage = (url) => (dispatch, getState) => {
 }
 
 export const updateDURA = (dura) => (dispatch, getState) => {
-    localStorage.setItem('LAST_DURA', dura); 
+    localStorage.setItem('LAST_DURA', dura);
     dispatch({
-    	type: 'UPDATE_DURA',
-    	payload: dura
+        type: 'UPDATE_DURA',
+        payload: dura
     })
 }

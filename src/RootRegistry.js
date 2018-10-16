@@ -1,0 +1,82 @@
+import React, {Component} from 'react';
+import connect from "react-redux/es/connect/connect";
+import {addRegistryItem, deleteRegistryItem, registryItemsAsArray} from "./redux/rootRegistry";
+
+class RootRegistry extends Component {
+
+    addRegistryItem = () => {
+        const name = this.refs.name.value;
+        const hash = this.refs.hash.value;
+        const isIpfs = !!this.refs.ipfs.checked;
+        this.props.addRegistryItem(
+            name,
+            hash,
+            isIpfs ? 'ipfs' : 'ipns'
+        ).then(() => {
+            this.props.loadRegistryItems();
+            this.refs.name.value = '';
+            this.refs.hash.value = '';
+        });
+    }
+
+    deleteRegistryItem = (itemName) => {
+        this.props.deleteRegistryItem(itemName);
+    }
+
+    render() {
+        const rows = this.props.registryItems.map(item => (
+            <tr key={item.name}>
+                <td>.{item.name}</td>
+                <td>{item.hash}</td>
+                <td>{item.protocol}</td>
+                <td>
+                    <button onClick={() => this.deleteRegistryItem(item.name)}>remove</button>
+                </td>
+            </tr>
+        ))
+        return (
+            <div>
+                <div>
+                    <table>
+                        <thead>
+                        <tr>
+                            <th>Name</th>
+                            <th>hash</th>
+                            <th>protacol</th>
+                            <th></th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        {rows}
+                        <tr key='add_row'>
+                            <td>.<input ref='name' placeholder='name'/></td>
+                            <td><input ref='hash' placeholder='hash'/></td>
+                            <td>
+                                <label>
+                                    <input type='radio' defaultChecked={true} ref='ipfs' name='protocol'/>ipfs
+                                </label>
+                                <label>
+                                    <input type='radio' defaultChecked={false} ref='ipns' name='protocol'/>ipns
+                                </label>
+                            </td>
+                            <td>
+                                <button onClick={this.addRegistryItem}>add</button>
+                            </td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        );
+    }
+}
+
+export default connect(
+    state => ({
+        registryItems: registryItemsAsArray(state)
+    }),
+    {
+        addRegistryItem,
+        deleteRegistryItem
+    }
+)(RootRegistry);
