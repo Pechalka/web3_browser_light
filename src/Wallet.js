@@ -1,88 +1,70 @@
-import React, { Component } from 'react';
+import React, {Component} from 'react';
 
-import CybLink from './components/CybLink';
-
-const walletStore = require('./walletStore');
+import connect from "react-redux/es/connect/connect";
+import * as actions from "./redux/wallet";
 
 class Wallet extends Component {
-	state = {
-		accounts: [],
-		defaultAccount: ''
-	}
 
-	loadAccounts = () => {
-		walletStore.getAccounts().then(accounts => {
-			this.setState({ accounts })
-		})
-	}
+    loadAccounts = () => {
+        this.props.loadAccounts()
+    }
 
-	componentWillMount() {
-		this.loadAccounts();
-	}
+    componentWillMount() {
+        this.loadAccounts();
+    }
 
-	deleteAccount = (address) => {
-		walletStore.removeAccount(address);
-		this.loadAccounts();
-		// delete __accounts[address] ;
-		// localStorage.setItem('accounts', JSON.stringify(__accounts));
-		// this.loadAccounts();
-	}
+    deleteAccount = (e, address) => {
+        e.stopPropagation();
+        this.props.deleteAccount(address).then(this.loadAccounts);
+    }
 
-	create = () =>  {
-		walletStore.createAccount();
-		this.loadAccounts();
-		// const data = web3.eth.accounts.create();
-		// __accounts[data.address.toLowerCase()] = data.privateKey;
-		// localStorage.setItem('accounts', JSON.stringify(__accounts));
-		// this.loadAccounts();
-		// console.log(data);
-	}
+    create = () => {
+        this.props.createAccount().then(this.loadAccounts);
+    }
 
-	importKey = () => {
-		const privatekey = this.refs.importPrivateKey.value;
-		walletStore.importKey(privatekey);
-		this.loadAccounts();
-		// const privatekey = this.refs.importPrivateKey.value;
-		// const data = web3.eth.accounts.privateKeyToAccount('0x' + privatekey);
+    importKey = () => {
+        const privatekey = this.refs.importPrivateKey.value;
+        this.props.importAccount(privatekey).then(this.loadAccounts);
+    }
 
-		// __accounts[data.address.toLowerCase()] = data.privateKey;
-		// localStorage.setItem('accounts', JSON.stringify(__accounts));
-		// this.loadAccounts();
-	}
-	
-	selectAccount = (account) => {
-		// web3.eth.defaultAccount = account.address;
-		// this.setState({
-		// 	defaultAccount: account.address
-		// })
-	}
-	render() {
-    	const { accounts, defaultAccount } = this.state;
+    selectAccount = (account) => {
+        this.props.setDefaultAccount(account.address);
+    }
 
-		return (
-			<div>
-				<h2>accounts</h2>
-            	<div>
-            		{accounts.map(account => {
-            			const css = `account ${account.address === defaultAccount ? 'account---defaultAccount' : ''}`;
-            			return (
-            				<div onClick={() => this.selectAccount(account)} className={css} key={account.address}>
-	            				<div>{account.address}</div>
-	            				<div>{account.balance}</div>
-	            				<button onClick={() => this.deleteAccount(account.address)}>forget</button>
-	            			</div>
-            			);
-            		})}
-            	</div>
-            	<div>
-            		<button onClick={this.create}>create</button>
-            	</div>
-            	<div>
-            		<button onClick={this.importKey}>import</button> <input ref='importPrivateKey' placeholder='privatekey'/>
-            	</div>				
-			</div>
-		);
-	}
+    render() {
+        const {accounts, defaultAccount} = this.props;
+
+        return (
+            <div>
+                <h2>accounts</h2>
+                <div>
+                    {accounts.map(account => {
+                        const css = `account ${account.address === defaultAccount ? 'account---defaultAccount' : ''}`;
+                        return (
+                            <div onClick={() => this.selectAccount(account)} className={css} key={account.address}>
+                                <div>{account.address}</div>
+                                <div>{account.balance}</div>
+                                <button onClick={(e) => this.deleteAccount(e, account.address)}>forget</button>
+                            </div>
+                        );
+                    })}
+                </div>
+                <div>
+                    <button onClick={this.create}>create</button>
+                </div>
+                <div>
+                    <button onClick={this.importKey}>import</button>
+                    <input ref='importPrivateKey' placeholder='privatekey'/>
+                </div>
+            </div>
+        );
+    }
 }
 
-export default Wallet
+export default connect(
+    ({wallet}) => ({
+        accounts: wallet.accounts,
+        defaultAccount: wallet.defaultAccount
+    }),
+    actions
+)(Wallet);

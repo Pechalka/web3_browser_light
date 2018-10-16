@@ -2,9 +2,6 @@ import React, { Component } from 'react';
 
 import { getAllSettings, setSettings } from './store';
 
-const walletStore = require('./walletStore');
-
-
 class Settings extends Component {
 
 	state = {
@@ -24,7 +21,6 @@ class Settings extends Component {
 	updateParitty = () => {
 		const value = this.refs.PARITTY_END_POINT.value;
 		setSettings('PARITTY_END_POINT', value);
-		walletStore.init(value);	
 	}
 
 	render() {
