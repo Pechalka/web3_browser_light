@@ -49,7 +49,7 @@ const URLToDURA = (url, apps, IPFS_END_POINT = '') => {
 	// return { app, q, path };
 
 	return `${q}.${app}${path}`;
-} 
+}
 
 const parseURL = (url) => {
 	let q = '';
@@ -75,8 +75,8 @@ const parseURL = (url) => {
 
 const DURAToURL = (dura, apps = {}, IPFS_END_POINT = 'http://localhost:8080') => {
 	if (dura === '')
-	    return { 
-	    	url: `${IPFS_END_POINT}/ipfs/QmZfSNpHVzTNi9gezLcgq64Wbj1xhwi9wk4AxYyxMZgtCG/`, 
+	    return {
+	    	url: `${IPFS_END_POINT}/ipfs/QmZfSNpHVzTNi9gezLcgq64Wbj1xhwi9wk4AxYyxMZgtCG/`,
 	    	dura: ''
 	    };
 
@@ -98,11 +98,20 @@ const DURAToURL = (dura, apps = {}, IPFS_END_POINT = 'http://localhost:8080') =>
       	dura: `${hash}.${app}`
       };
     }
-    
+
+    if (app === 'dev') {
+    	const port = q || '5000';
+
+    	return {
+    		url: `http://localhost:${port}`,
+			dura: `${port}.${app}`
+		}
+	}
+
     return {
     	url: `${IPFS_END_POINT}/ipfs/QmZfSNpHVzTNi9gezLcgq64Wbj1xhwi9wk4AxYyxMZgtCG/`
     };
-} 
+}
 
 module.exports = { URLToDURA, DURAToURL, parseURL }
 

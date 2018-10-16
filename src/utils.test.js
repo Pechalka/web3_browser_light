@@ -24,7 +24,7 @@ it('parseURL .help', () => {
 
   expect(q).toEqual('');
   expect(app).toEqual('help');
-  expect(path).toEqual('');  
+  expect(path).toEqual('');
 })
 
 
@@ -33,7 +33,7 @@ it('parseURL .wiki', () => {
 
   expect(q).toEqual('');
   expect(app).toEqual('wiki');
-  expect(path).toEqual('');  
+  expect(path).toEqual('');
 })
 
 
@@ -42,7 +42,7 @@ it('parseURL 1.help', () => {
 
   expect(q).toEqual('1');
   expect(app).toEqual('help');
-  expect(path).toEqual('');  
+  expect(path).toEqual('');
 })
 
 
@@ -51,7 +51,7 @@ it('parseURL 43', () => {
 
   expect(q).toEqual('43');
   expect(app).toEqual('cyber');
-  expect(path).toEqual('');  
+  expect(path).toEqual('');
 })
 
 
@@ -60,7 +60,7 @@ it('parseURL .wiki/test', () => {
 
   expect(q).toEqual('');
   expect(app).toEqual('wiki');
-  expect(path).toEqual('test');  
+  expect(path).toEqual('test');
 })
 
 
@@ -69,7 +69,7 @@ it('parseURL .wiki/page.html', () => {
 
   expect(q).toEqual('');
   expect(app).toEqual('wiki');
-  expect(path).toEqual('page.html');  
+  expect(path).toEqual('page.html');
 })
 
 it('parseURL .wiki/wiki/page1.html', () => {
@@ -77,7 +77,7 @@ it('parseURL .wiki/wiki/page1.html', () => {
 
   expect(q).toEqual('');
   expect(app).toEqual('wiki');
-  expect(path).toEqual('wiki/page1.html');  
+  expect(path).toEqual('wiki/page1.html');
 })
 
 
@@ -143,6 +143,19 @@ it('DURAToURL should process q', () => {
   expect(dura).toEqual('43.cyber')
 })
 
+it('port.dev => localhost:port', () => {
+    const { url, dura } = utils.DURAToURL('4000.dev', apps, '');
+
+    expect(url).toEqual(`http://localhost:4000`);
+    expect(dura).toEqual('4000.dev')
+})
+
+it('default.dev => localhost:5000', () => {
+    const { url, dura } = utils.DURAToURL('.dev', apps, '');
+
+    expect(url).toEqual(`http://localhost:5000`);
+    expect(dura).toEqual('5000.dev')
+})
 
 
 
