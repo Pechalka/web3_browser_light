@@ -1,33 +1,30 @@
 import React, { Component } from 'react';
-
-import { getAllSettings, setSettings } from './store';
+import { connect } from 'react-redux';
+import * as actions from './redux/settings';
 
 class Settings extends Component {
 
-	state = {
-		IPFS_END_POINT: '',
-		PARITTY_END_POINT: ''
-	}
-
-	componentDidMount() {
-		getAllSettings().then(state => this.setState(state));
-	}
-
 	updateIPFS = () => {
 		const value = this.refs.IPFS_END_POINT.value;
-		setSettings('IPFS_END_POINT', value)
+		this.props.setIPFS(value)
 	}
 
 	updateParitty = () => {
 		const value = this.refs.PARITTY_END_POINT.value;
-		setSettings('PARITTY_END_POINT', value);
+		this.props.setParity(value)
+	}
+
+	updateSearch = () => {
+		const value = this.refs.SEARCH_END_POINT.value;
+		this.props.setSearch(value)
 	}
 
 	render() {
 		const {
 			IPFS_END_POINT,
-			PARITTY_END_POINT
-		} = this.state;
+			PARITTY_END_POINT,
+			SEARCH_END_POINT
+		} = this.props;
 
 		return (
 			<div>
@@ -42,10 +39,22 @@ class Settings extends Component {
 						<input className='form-input' ref='PARITTY_END_POINT' defaultValue={PARITTY_END_POINT}/>
 						<button onClick={this.updateParitty}>update</button>
 					</div>
+					<div>
+						<div>search:</div>
+						<input className='form-input' ref='SEARCH_END_POINT' defaultValue={SEARCH_END_POINT}/>
+						<button onClick={this.updateSearch}>update</button>
+					</div>
 				</div>
 			</div>
 		);
 	}
 }
 
-export default Settings;
+export default connect(
+	({ settings }) => ({
+		IPFS_END_POINT: settings.IPFS_END_POINT,
+		PARITTY_END_POINT: settings.PARITTY_END_POINT,
+		SEARCH_END_POINT: settings.SEARCH_END_POINT
+	}),
+	actions
+)(Settings);

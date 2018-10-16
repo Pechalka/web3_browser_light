@@ -1,6 +1,6 @@
 
 import { URLToDURA, DURAToURL } from '../utils';
-import { getApps, getSettings } from '../store';
+import { getApps } from '../store';
 import { hashHistory } from 'react-router';
 
 //TODO: proccess loading
@@ -37,11 +37,10 @@ export const reducer = (state = initState, action) => {
 	}
 }
 
-export const init = () => (dispatch, getState) => {
+export const init = (_IPFS_END_POINT) => (dispatch, getState) => {
 	Promise.all([
-      getApps(),
-      getSettings('IPFS_END_POINT')
-    ]).then(([_apps, _IPFS_END_POINT]) => {
+      getApps()
+    ]).then(([_apps]) => {
       apps = _apps;
       IPFS_END_POINT = _IPFS_END_POINT;
 
@@ -50,6 +49,8 @@ export const init = () => (dispatch, getState) => {
       dispatch(navigate(dura, true))
     })
 }
+
+
 
 export const navigate = (_dura, init = false) => (dispatch, getState) => {
 	const { url, dura } = DURAToURL(_dura, apps, IPFS_END_POINT)

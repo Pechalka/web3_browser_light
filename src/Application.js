@@ -2,22 +2,12 @@ import React, {Component} from 'react';
 import {connect} from "react-redux";
 import {navigate} from './redux/browser';
 import {init as initWallet, approve, reject} from './redux/wallet';
-import {getSettings} from './store';
 
 import CybLink from './components/CybLink';
 
 //TODO: wallet, fix nav bar css
 
 class Application extends Component {
-
-    componentWillMount() {
-        this.props.initWallet('http://localhost:8545');
-
-        getSettings('PARITTY_END_POINT').then(PARITTY_END_POINT => {
-            this.props.initWallet(PARITTY_END_POINT);
-        });
-    }
-
     _handleKeyPress = (e) => {
         if (e.key === 'Enter') {
             const value = this.refs.input.value;

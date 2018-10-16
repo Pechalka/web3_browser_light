@@ -10,8 +10,7 @@ import Home from './Home';
 import Wallet from './Wallet';
 
 import { Provider } from "react-redux";
-import store from './redux/store';
-import { init } from './redux/browser';
+import { store, appStart } from './redux/store';
 
 import { IndexRoute, Route, Router, hashHistory } from 'react-router';
 
@@ -31,5 +30,6 @@ ReactDOM.render(
     </Provider>
 , document.getElementById('root'));
 
+appStart(store);
 
-store.dispatch(init());
+
