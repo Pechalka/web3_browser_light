@@ -21,12 +21,18 @@ import {
     init as initRootRegistry
 } from './rootRegistry';
 
+import {
+    reducer as appMenuReducer,
+    init as initAppMenu
+} from './appMenu';
+
 
 const rootReducer = combineReducers({
     browser: browserReducer,
     wallet: walletReducer,
     settings: settingReducer,
     rootRegistry: rootRegistryReducer,
+    appMenu: appMenuReducer,
 });
 const store = createStore(rootReducer, applyMiddleware(thunk));
 
@@ -36,6 +42,7 @@ export const appStart = () => {
         store.dispatch(initBrowser(IPFS_END_POINT));
         store.dispatch(initWallet(PARITTY_END_POINT));
         store.dispatch(initRootRegistry());
+        store.dispatch(initAppMenu());
     })
 }
 

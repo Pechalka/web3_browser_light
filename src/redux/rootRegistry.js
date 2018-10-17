@@ -27,10 +27,10 @@ const initState = {
 
 export const reducer = (state = initState, action) => {
     switch (action.type) {
-        case 'SET_ITEMS': {
+        case 'SET_ROOT_REGISTRY_ITEMS': {
             return {
                 ...state,
-                items: action.payload,
+                items: {...action.payload},
             }
         }
 
@@ -47,7 +47,7 @@ export const init = () => (dispatch, getState) => new Promise(resolve => {
     }
 
     dispatch({
-        type: 'SET_ITEMS',
+        type: 'SET_ROOT_REGISTRY_ITEMS',
         payload: registryItems
     });
     dispatch(saveRootRegistryItemsInLs());
@@ -60,8 +60,8 @@ export const deleteRegistryItem = (itemName) => (dispatch, getState) => {
     delete registryItems[itemName];
 
     dispatch({
-            type: 'SET_ITEMS',
-            payload: registryItems
+        type: 'SET_ROOT_REGISTRY_ITEMS',
+        payload: registryItems
     });
     dispatch(saveRootRegistryItemsInLs());
 }
@@ -90,7 +90,7 @@ export const addRegistryItem = (name, hash, protocol) => (dispatch, getState) =>
     };
 
     dispatch({
-        type: 'SET_ITEMS',
+        type: 'SET_ROOT_REGISTRY_ITEMS',
         payload: registryItems
     });
     dispatch(saveRootRegistryItemsInLs());
@@ -100,5 +100,5 @@ export const addRegistryItem = (name, hash, protocol) => (dispatch, getState) =>
 
 const saveRootRegistryItemsInLs = () => (dispatch, getState) => {
     const registryItems = getState().rootRegistry.items;
-    localStorage.setItem('rootRegistry', JSON.stringify(registryItems));
+    localStorage.setItem(localStorageItemName, JSON.stringify(registryItems));
 }

@@ -1,0 +1,21 @@
+.menuContainer {
+    position: fixed;
+    top: 300px;
+    bottom: 0;
+    height: 100%;
+}
+
+.appMenu {
+    display: flex;
+    flex-direction: column;
+}
+
+.AppMenuItem {
+    padding: 0.5em;
+    background-color: #979797;
+    display: inline-flex;
+}
+
+.removeButton {
+    margin: 0 0 0 auto;
+}

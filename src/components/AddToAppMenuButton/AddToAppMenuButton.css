@@ -1,0 +1,10 @@
+.addAppButton {
+    background-color: coral;
+    position: absolute;
+    top: 0;
+    right: 0;
+}
+
+.favoritesContainer {
+    position: relative;
+}
