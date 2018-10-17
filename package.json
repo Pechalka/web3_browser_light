@@ -21,12 +21,12 @@
     "rimraf": "^2.6.2"
   },
   "scripts": {
-    "start": "react-scripts start",
+    "react-dev": "react-scripts start",
     "build": "react-scripts build",
     "build:preload": "webpack --config webpack/preload",
     "test": "react-scripts test",
     "release": "rimraf dist && rimraf build && yarn run build && yarn run build:preload && electron-builder --config electron/config.json",
-    "electron-dev": "concurrently \"BROWSER=none yarn start\" \"wait-on http://localhost:3000 && electron .\""
+    "start": "concurrently \"BROWSER=none yarn run react-dev\" \"wait-on http://localhost:3000 && electron .\""
   },
   "browserslist": [
     ">0.2%",

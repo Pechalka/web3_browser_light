@@ -13,12 +13,13 @@ class CybLink extends Component {
 	}
 
 	render() {
-		const { children, dura } = this.props;
+		const { children, dura, navigate, ...props } = this.props;
 
 		return (
 			<a 
 			  onClick={this.onLinkClick} 
 			  href={`cyb://${dura}`}
+			  {...props}
 			>{this.props.children}</a>				
 		);
 	}

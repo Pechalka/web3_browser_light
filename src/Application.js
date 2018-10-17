@@ -4,20 +4,25 @@ import {navigate} from './redux/browser';
 import {init as initWallet, approve, reject} from './redux/wallet';
 
 import CybLink from './components/CybLink';
+import App, { AppHeader, AppContent } from './components/App/App';
+import Navigation, { NavigationLeft, NavigationRight, NavigationCenter } from './components/Navigation/Navigation';
+import SearchInput from './components/SearchInput/SearchInput';
+import Logo from './components/Logo/Logo';
+import IdBar, { SettingsLink, WalletLink, CurrentUser } from './components/IdBar/IdBar';
+import ConfirmationPopup, { ApproveButton, RejectButton} from './components/ConfirmationPopup/ConfirmationPopup';
 
-//TODO: wallet, fix nav bar css
 
 class Application extends Component {
     _handleKeyPress = (e) => {
         if (e.key === 'Enter') {
-            const value = this.refs.input.value;
+            const value = this.input.value;
             this.props.navigate(value);
         }
     }
 
     componentWillReceiveProps(nextProps) {
         if (this.props.dura !== nextProps.dura) {
-            this.refs.input.value = nextProps.dura;
+            this.input.value = nextProps.dura;
         }
     }
 
@@ -30,34 +35,39 @@ class Application extends Component {
     }
 
     render() {
-        const {dura, pendingRequest} = this.props;
-
+        const {dura, defaultAccount, pendingRequest } = this.props;
+        const homePage = dura === '';
         return (
-            <div className='applications'>
-                <div className='app'>
-                    <div className='app__navigation'>
-                        <CybLink dura=''>logo</CybLink>
-                        <input
-                            className='input'
-                            ref='input'
-                            defaultValue={dura}
-                            onKeyPress={this._handleKeyPress}
-                        />
-                        <CybLink dura='settings.cyb'>settings</CybLink>
-                        <div>
-                            <CybLink dura='wallet.cyb'>Wallet</CybLink>
-                            <div> {this.props.defaultAccount} </div>
-                            {pendingRequest && <div>
-                                <button onClick={this.approve}>approve</button>
-                                <button onClick={this.reject}>reject</button>
-                            </div>}
-                        </div>
-                    </div>
-                    <div className='app__content'>
-                        {this.props.children}
-                    </div>
-                </div>
-            </div>
+            <App>
+                {pendingRequest && <ConfirmationPopup>
+                    <ApproveButton onClick={this.approve}>approve</ApproveButton>
+                    <ApproveButton onClick={this.reject}>reject</ApproveButton>
+                </ConfirmationPopup>}
+                <AppHeader isHome={homePage}>
+                    <Navigation isHome={homePage}>
+                        <NavigationLeft>
+                            <Logo />
+                        </NavigationLeft>
+                        <NavigationCenter>
+                            <SearchInput
+                                inputRef={node => { this.input = node;}}
+                                defaultValue={dura}
+                                onKeyPress={this._handleKeyPress}
+                            />
+                        </NavigationCenter>
+                        <NavigationRight>
+                            <IdBar>
+                                <SettingsLink />
+                                <WalletLink />
+                                <CurrentUser defaultAccount={defaultAccount}/>
+                            </IdBar>
+                        </NavigationRight>
+                    </Navigation>
+                </AppHeader>
+                <AppContent>
+                    {this.props.children}
+                </AppContent>
+            </App>
         );
     }
 }
