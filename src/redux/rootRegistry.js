@@ -39,65 +39,66 @@ export const reducer = (state = initState, action) => {
     }
 }
 
-let __registryItems = {};
-
 export const init = () => (dispatch, getState) => new Promise(resolve => {
-    const _localStorageItems = JSON.parse(localStorage.getItem(localStorageItemName) || '{}');
+    let registryItems = JSON.parse(localStorage.getItem(localStorageItemName) || '{}');
 
-    if (Object.keys(_localStorageItems).length === 0) {
-        __registryItems = initState.items;
-    } else {
-        __registryItems = _localStorageItems
+    if (Object.keys(registryItems).length === 0) {
+        registryItems = initState.items;
     }
-
-    localStorage.setItem(localStorageItemName, JSON.stringify(__registryItems));
 
     dispatch({
         type: 'SET_ITEMS',
-        payload: __registryItems
-    })
+        payload: registryItems
+    });
+    dispatch(saveRootRegistryItemsInLs());
 
-    resolve(__registryItems)
+    resolve(registryItems);
 })
 
 export const deleteRegistryItem = (itemName) => (dispatch, getState) => {
-    delete __registryItems[itemName];
-    localStorage.setItem(localStorageItemName, JSON.stringify(__registryItems));
+    let registryItems = getState().rootRegistry.items;
+    delete registryItems[itemName];
 
     dispatch({
-        type: 'SET_ITEMS',
-        payload: __registryItems
-    })
+            type: 'SET_ITEMS',
+            payload: registryItems
+    });
+    dispatch(saveRootRegistryItemsInLs());
 }
 
-export const registryItemsAsArray = (state) => {
-    const itemsMap = state.rootRegistry.items;
-    const itemsArray = Object.keys(itemsMap).map(key => ({
+export const getRegistryItemsAsArray = (state) => {
+    const registryItems = state.rootRegistry.items;
+    const registryItemsArray = Object.keys(registryItems).map(key => ({
         name: key,
-        hash: itemsMap[key].hash,
-        protocol: itemsMap[key].protocol,
+        hash: registryItems[key].hash,
+        protocol: registryItems[key].protocol,
     }));
 
-    return itemsArray;
+    return registryItemsArray;
 }
 
 export const getRegistryItems = (state) => {
     return state.rootRegistry.items
 }
 
-
 export const addRegistryItem = (name, hash, protocol) => (dispatch, getState) => new Promise(resolve => {
-    __registryItems[name] = {
+    let registryItems = getState().rootRegistry.items;
+
+    registryItems[name] = {
         hash,
         protocol
     };
 
-    localStorage.setItem(localStorageItemName, JSON.stringify(__registryItems));
-
     dispatch({
         type: 'SET_ITEMS',
-        payload: __registryItems
+        payload: registryItems
     });
+    dispatch(saveRootRegistryItemsInLs());
 
-    resolve(__registryItems);
+    resolve(registryItems);
 })
+
+const saveRootRegistryItemsInLs = () => (dispatch, getState) => {
+    const registryItems = getState().rootRegistry.items;
+    localStorage.setItem('rootRegistry', JSON.stringify(registryItems));
+}

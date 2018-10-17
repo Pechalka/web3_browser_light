@@ -1,6 +1,6 @@
 import React, {Component} from 'react';
 import connect from "react-redux/es/connect/connect";
-import {addRegistryItem, deleteRegistryItem, registryItemsAsArray} from "./redux/rootRegistry";
+import {addRegistryItem, deleteRegistryItem, getRegistryItemsAsArray} from "./redux/rootRegistry";
 
 class RootRegistry extends Component {
 
@@ -13,7 +13,6 @@ class RootRegistry extends Component {
             hash,
             isIpfs ? 'ipfs' : 'ipns'
         ).then(() => {
-            this.props.loadRegistryItems();
             this.refs.name.value = '';
             this.refs.hash.value = '';
         });
@@ -73,7 +72,7 @@ class RootRegistry extends Component {
 
 export default connect(
     state => ({
-        registryItems: registryItemsAsArray(state)
+        registryItems: getRegistryItemsAsArray(state)
     }),
     {
         addRegistryItem,
