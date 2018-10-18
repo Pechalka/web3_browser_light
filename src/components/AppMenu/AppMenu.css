@@ -1,6 +1,6 @@
 .menuContainer {
     position: fixed;
-    top: 300px;
+    top: 400px;
     bottom: 0;
     height: 100%;
 }
@@ -18,4 +18,11 @@
 
 .removeButton {
     margin: 0 0 0 auto;
+    padding: 0.5em;
+    background-color: #979797;
+    cursor: pointer;
+}
+
+.addMenuItem {
+    background-color: #979797;
 }

@@ -19,6 +19,11 @@ class AppMenu extends Component {
         this.props.hideInput();
     };
 
+    rejectFavorite = () => {
+        this.refs.input.value = 'New App';
+        this.hideInput();
+    }
+
     render() {
         const deleteAppFromMenu = (rootDura) => {
             this.props.deleteMenuItem(rootDura);
@@ -29,7 +34,7 @@ class AppMenu extends Component {
                 <CybLink dura={item.rootDura}>
                     <AppMenuItem name={item.name}/>
                 </CybLink>
-                <button className='removeButton' onClick={() => deleteAppFromMenu(item.rootDura)}>&#128465;</button>
+                <div className='removeButton' onClick={() => deleteAppFromMenu(item.rootDura)}>&#128465;</div>
             </span>
         });
 
@@ -41,14 +46,17 @@ class AppMenu extends Component {
                     {appMenuItems}
                 </div>
                 {pendingAddToFavorites &&
-                    <span>
+                    <span className='addMenuItem'>
                         <input
                             ref='input'
                             defaultValue='New App'
                         />
-                        <button onClick={this.addToFavorites} className={styles.addAppButton}>
-                            &#128077;
-                        </button>
+                        <div onClick={this.rejectFavorite} className='AppMenuItem'>
+                            &#10006;
+                        </div>
+                        <div onClick={this.addToFavorites} className='AppMenuItem'>
+                            &#10004;
+                        </div>
                     </span>
                 }
             </div>
