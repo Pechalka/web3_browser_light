@@ -95,7 +95,8 @@ export const DURAToURL = (dura, apps = {}, IPFS_END_POINT = 'http://localhost:80
     }
 
     return {
-        url: `${IPFS_END_POINT}/ipfs/QmZfSNpHVzTNi9gezLcgq64Wbj1xhwi9wk4AxYyxMZgtCG/`
+        url: '',
+        dura: 'notfound.cyb'
     };
 }
 

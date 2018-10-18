@@ -69,6 +69,12 @@ export const navigate = (_dura, init = false) => (dispatch, getState) => {
         return;
     }
 
+    if (dura === 'notfound.cyb') {
+        hashHistory.push('/notfound');
+        dispatch(updateDURA(_dura));
+        return;
+    }
+
     console.log('navigate');
     console.log('dura', dura);
     console.log('url', url);

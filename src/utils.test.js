@@ -127,6 +127,13 @@ it(' ipfs hast -> known app extention', () => {
     expect(dura).toEqual('.chaingear/#/');
 })
 
+it(' correct dura with # after f5 -> dura', () => {
+    const {url, dura} = utils.DURAToURL('.notresolvedapp/#/', apps, 'http://earth.cybernode.ai:34402');
+
+    expect(url).toEqual('');
+    expect(dura).toEqual('notfound.cyb');
+})
+
 it('-> DURAToURL', () => {
     const {url} = utils.DURAToURL('.wiki/wiki/', apps, 'http://earth.cybernode.ai:34402');
 
