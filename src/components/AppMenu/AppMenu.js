@@ -22,7 +22,7 @@ class AppMenu extends Component {
     render() {
         const deleteAppFromMenu = (rootDura) => {
             this.props.deleteMenuItem(rootDura);
-        }
+        };
 
         const appMenuItems = this.props.menuItems.map(item => {
             return <span className='AppMenuItem' key={item.rootDura}>
@@ -66,7 +66,6 @@ class AppMenuItem extends Component {
         )
     }
 }
-
 
 export default connect(
     state => ({

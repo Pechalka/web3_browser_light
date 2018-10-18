@@ -1,8 +1,20 @@
 .addAppButton {
-    background-color: coral;
+    font-size: 30px;
+    padding: 5px;
     position: absolute;
     top: 0;
     right: 0;
+    cursor: pointer;
+}
+
+.favoritedPage {
+    font-size: 30px;
+    padding: 5px;
+    position: absolute;
+    top: 0;
+    right: 0;
+    cursor: pointer;
+    color: yellow;
 }
 
 .favoritesContainer {

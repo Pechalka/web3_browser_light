@@ -6,22 +6,30 @@ const styles = require('./AddToAppMenuButton.css');
 
 class AddToAppMenuButton extends Component {
 
-    showInput = () => {
-        this.props.showInput();
+    _onclick = () => {
+        if (!this.isFavoritedPage()) {
+            this.props.showInput();
+        } else {
+            this.props.deleteMenuItem(this.props.currentDura)
+        }
     };
 
-    render() {
+    isFavoritedPage = () => {
+        const menuItems = this.props.menuItems;
+        const currentDura = this.props.currentDura;
 
-        const pendingAddToFavorites = this.props.pendingAddToFavorites;
+        return menuItems.find(item => {
+            return item.rootDura === currentDura
+        })
+    }
+
+    render() {
+        const className = this.isFavoritedPage() ? 'favoritedPage' : 'addAppButton';
 
         return (
-            <span>
-                {!pendingAddToFavorites &&
-                    <button onClick={this.showInput} className='addAppButton'>
-                        &#9734;
-                    </button>
-                }
-            </span>
+            <div onClick={this._onclick} className={className}>
+                &#9734;
+            </div>
         )
     }
 }
@@ -36,7 +44,6 @@ export default connect(
     state => ({
         menuItems: state.appMenu.items,
         currentDura: state.browser.dura,
-        pendingAddToFavorites: state.appMenu.pendingAddToFavorites,
     }),
     actions
 )(AddToAppMenuButton);
