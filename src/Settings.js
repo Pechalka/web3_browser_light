@@ -2,6 +2,10 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import * as actions from './redux/settings';
 
+import Container from './components/Container/Container';
+import CybLink from './components/CybLink';
+
+
 class Settings extends Component {
 
 	updateIPFS = () => {
@@ -27,7 +31,7 @@ class Settings extends Component {
 		} = this.props;
 
 		return (
-			<div>
+			<Container>
 				<div>
 					<div>
 						<div>IPFS:</div>
@@ -44,8 +48,20 @@ class Settings extends Component {
 						<input className='form-input' ref='SEARCH_END_POINT' defaultValue={SEARCH_END_POINT}/>
 						<button onClick={this.updateSearch}>update</button>
 					</div>
+					<div>
+						<CybLink dura='.help'>how to configure local nodes</CybLink>
+					</div>
+					<div>
+						<CybLink dura='rr.cyb'>root registry</CybLink>					
+					</div>
+					<div>
+						<button>check status</button>
+					</div>
+					<div>
+						<button>reset all settings</button>
+					</div>
 				</div>
-			</div>
+			</Container>
 		);
 	}
 }

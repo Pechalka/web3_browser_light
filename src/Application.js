@@ -1,7 +1,7 @@
 import React, {Component} from 'react';
 import {connect} from "react-redux";
-import {navigate} from './redux/browser';
-import {init as initWallet, approve, reject} from './redux/wallet';
+import {navigate, goBack} from './redux/browser';
+import {approve, reject} from './redux/wallet';
 
 import AppMenu from './components/AppMenu/AppMenu';
 import AddToAppMenuButton, {Container} from "./components/AddToAppMenuButton/AddToAppMenuButton";
@@ -12,6 +12,7 @@ import Logo from './components/Logo/Logo';
 import IdBar, {SettingsLink, WalletLink, CurrentUser} from './components/IdBar/IdBar';
 import ConfirmationPopup, {ApproveButton, RejectButton} from './components/ConfirmationPopup/ConfirmationPopup';
 
+import CybLink from './components/CybLink';
 
 class Application extends Component {
     _handleKeyPress = (e) => {
@@ -36,7 +37,7 @@ class Application extends Component {
     }
 
     render() {
-        const {dura, defaultAccount, pendingRequest} = this.props;
+        const {dura, defaultAccount, pendingRequest, canBack, goBack } = this.props;
         const homePage = dura === '';
         return (
             <App>
@@ -59,6 +60,12 @@ class Application extends Component {
                                     defaultValue={dura}
                                     onKeyPress={this._handleKeyPress}
                                 />
+                                <button disabled={!canBack} onClick={goBack}>back</button>
+                                <button disabled>forward</button>
+                                {(!!dura && dura.indexOf('.dev') !== -1) && <div style={{ display: 'inline-block'}}>
+                                    <button>deploy</button>
+                                    <CybLink dura='.help/#/deploy'>how to deploy app</CybLink>
+                                </div>}
                                 <AddToAppMenuButton/>
                             </Container>
                         </NavigationCenter>
@@ -82,12 +89,14 @@ class Application extends Component {
 export default connect(
     state => ({
         dura: state.browser.dura,
+        canBack: !!state.browser.backDura,
         pendingRequest: state.wallet.pendingRequest,
         defaultAccount: state.wallet.defaultAccount
     }),
     {
         navigate,
         approve,
-        reject
+        reject,
+        goBack
     }
 )(Application);

@@ -21,6 +21,10 @@ const initState = {
         'test': {
             hash: 'Qma2CP6cRe8K6QExZ2MwGW5XYC76r9CZYxbbWEtnMzcZ6g',
             protocol: 'ipfs'
+        },
+        'chaingear': {
+            hash: 'QmfBnoeaTX4YVFFWWrDsafSwEyXSoUtvypr77yBcsKqQYZ',
+            protocol: 'ipfs'
         }
     },
 }

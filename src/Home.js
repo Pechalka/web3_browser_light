@@ -16,13 +16,13 @@ class HomePage extends Component {
 		return (
 			<Home>
 				 <Items>
-		          <Item dura='rr.cyb'>
+		          <Item dura='apps.cyb'>
 		            <ItemTitle>App Store</ItemTitle>
 		            <Image type='appStore'/>
 		            <Arrow />
 		          </Item>
 
-		          <Item dura='.wiki' >
+		          <Item dura='.chaingear/#/new' >
 		            <ItemTitle>Create Register</ItemTitle>
 		            <Image type='createRegistry'/>
 		            <Arrow />

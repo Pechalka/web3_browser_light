@@ -10,6 +10,7 @@ const START_DURA = '';
 const initState = {
     url: DURAToURL(START_DURA).url,
     dura: START_DURA,
+    backDura: null,
     loading: false
 }
 
@@ -21,9 +22,18 @@ export const reducer = (state = initState, action) => {
                 ...action.payload
             }
         }
+
+        case 'MOVE_BACK': {
+            return {
+                ...state,
+                backDura: null
+            }
+        }
+
         case 'UPDATE_DURA': {
             return {
                 ...state,
+                backDura: state.dura,
                 dura: action.payload
             }
         }
@@ -35,6 +45,14 @@ export const reducer = (state = initState, action) => {
 export const init = (_IPFS_END_POINT) => (dispatch, getState) => {
     const dura = localStorage.getItem('LAST_DURA') || '';
     dispatch(navigate(dura, true))
+}
+
+export const goBack = () => (dispatch, getState) => {
+    const { backDura } = getState().browser;
+    if (backDura) {
+        dispatch(navigate(backDura));
+        dispatch({ type: 'MOVE_BACK' })
+    }
 }
 
 export const navigate = (_dura, init = false) => (dispatch, getState) => {
@@ -62,7 +80,14 @@ export const navigate = (_dura, init = false) => (dispatch, getState) => {
         return;
     }
 
-    if (_dura === '') {
+    if (_dura === 'apps.cyb') {
+        if (!init)
+            hashHistory.push('/appstore');
+        dispatch(updateDURA(_dura));
+        return;
+    }
+
+    if (_dura === '') { //App not found
         if (!init)
             hashHistory.push('/');
         dispatch(updateDURA(_dura));

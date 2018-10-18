@@ -2,6 +2,8 @@ import React, {Component} from 'react';
 import connect from "react-redux/es/connect/connect";
 import {addRegistryItem, deleteRegistryItem, getRegistryItemsAsArray} from "./redux/rootRegistry";
 
+import Container from './components/Container/Container';
+
 class RootRegistry extends Component {
 
     addRegistryItem = () => {
@@ -34,14 +36,14 @@ class RootRegistry extends Component {
             </tr>
         ))
         return (
-            <div>
+            <Container>
                 <div>
                     <table>
                         <thead>
                         <tr>
                             <th>Name</th>
                             <th>hash</th>
-                            <th>protacol</th>
+                            <th>protocol</th>
                             <th></th>
                         </tr>
                         </thead>
@@ -65,7 +67,7 @@ class RootRegistry extends Component {
                         </tbody>
                     </table>
                 </div>
-            </div>
+            </Container>
         );
     }
 }
