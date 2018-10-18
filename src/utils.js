@@ -8,6 +8,7 @@ export const URLToDURA = (url, apps, IPFS_END_POINT = '') => {
     let app = 'ipfs';
     const ipfsIndex = url.indexOf('ipfs');
     if (ipfsIndex !== -1) {
+
         hash = url.substr(ipfsIndex + 5, 46);
         path = url.substr(ipfsIndex + 46 + 5, url.length);
         // console.log(' hash ', hash);
@@ -17,9 +18,20 @@ export const URLToDURA = (url, apps, IPFS_END_POINT = '') => {
                 app = key;
                 find = true;
             }
-        })
+        });
 
+        if (!find) {
+            q = hash
+        }
+    }
 
+    if (url.indexOf('localhost') > 0) {
+        const rawPort = url.split('localhost:')[1];
+        const slashIndex = rawPort.indexOf('/');
+
+        q = rawPort.substring(0, slashIndex);
+        path = rawPort.substring(slashIndex, rawPort.length);
+        app = 'dev';
     }
 
     return `${q}.${app}${path}`;
