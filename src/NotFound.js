@@ -7,7 +7,7 @@ class NotFound extends Component {
         return (
             <div>
                 Not Found :(
-                <CybLink dura='root.cyb'>Create </CybLink> this app!
+                <CybLink dura='rr.cyb'>Create </CybLink> this app!
             </div>
         );
     }

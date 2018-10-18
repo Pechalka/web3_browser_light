@@ -5,12 +5,15 @@ import {Provider} from "react-redux";
 import {store, appStart} from './redux/store';
 import AppRouter from "./router";
 
-ReactDOM.render(
-    <Provider store={store}>
-        <AppRouter/>
-    </Provider>
-    , document.getElementById('root'));
 
-appStart(store);
+
+
+appStart(store).then(() => {
+	ReactDOM.render(
+	    <Provider store={store}>
+	        <AppRouter/>
+	    </Provider>
+	    , document.getElementById('root'));	
+});
 
 

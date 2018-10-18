@@ -16,7 +16,7 @@ class HomePage extends Component {
 		return (
 			<Home>
 				 <Items>
-		          <Item dura='root.cyb'>
+		          <Item dura='rr.cyb'>
 		            <ItemTitle>App Store</ItemTitle>
 		            <Image type='appStore'/>
 		            <Arrow />

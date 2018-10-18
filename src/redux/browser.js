@@ -41,7 +41,7 @@ export const navigate = (_dura, init = false) => (dispatch, getState) => {
     const apps = getRegistryItems(getState());
     const ipfsEndpoint = getIpfsEndpoint(getState());
     const {url, dura} = DURAToURL(_dura, apps, ipfsEndpoint);
-    if (_dura === 'root.cyb') {
+    if (_dura === 'rr.cyb') {
         if (!init)
             hashHistory.push('/rootregistry');
         dispatch(updateDURA(_dura));
