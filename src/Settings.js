@@ -35,7 +35,8 @@ class Settings extends Component {
 
 			ipfsStatus,
 			ethNodeStatus,
-			cyberNodeStatus
+			cyberNodeStatus,
+			pending
 		} = this.props;
 
 		return (
@@ -45,19 +46,19 @@ class Settings extends Component {
 						<div>IPFS:</div>
 						<input className='form-input' ref='IPFS_END_POINT' defaultValue={IPFS_END_POINT}/>
 						<button onClick={this.updateIPFS}>update</button>
-						<Indecator status={ipfsStatus} />
+						<Indecator status={pending ? null : ipfsStatus} />
 					</div>
 					<div>
 						<div>paritty:</div>
 						<input className='form-input' ref='PARITTY_END_POINT' defaultValue={PARITTY_END_POINT}/>
 						<button onClick={this.updateParitty}>update</button>
-						<Indecator status={ethNodeStatus}/>
+						<Indecator status={pending ? null : ethNodeStatus}/>
 					</div>
 					<div>
 						<div>search:</div>
 						<input className='form-input' ref='SEARCH_END_POINT' defaultValue={SEARCH_END_POINT}/>
 						<button onClick={this.updateSearch}>update</button>
-						<Indecator status={cyberNodeStatus}/>
+						<Indecator status={pending ? null : cyberNodeStatus}/>
 					</div>
 					<div>
 						<CybLink dura='.help'>how to configure local nodes</CybLink>
@@ -82,7 +83,8 @@ export default connect(
 
 		ipfsStatus: settings.ipfsStatus,
 		ethNodeStatus: settings.ethNodeStatus,
-		cyberNodeStatus: settings.cyberNodeStatus
+		cyberNodeStatus: settings.cyberNodeStatus,
+		pending: settings.pending,
 	}),
 	actions
 )(Settings);

@@ -6,7 +6,7 @@ let initState = {
     PARITTY_END_POINT: 'http://localhost:8545',
     SEARCH_END_POINT: 'http://earth.cybernode.ai:34657',
 
-
+    pending: false,
     ipfsStatus: 'fail',
     ethNodeStatus: 'fail',
     cyberNodeStatus: 'fail'
@@ -42,9 +42,18 @@ export const reducer = (state = initState, action) => {
         case 'SET_STATUS': {
             return {
                 ...state,
-                ...action.payload
+                ...action.payload,
+                pending: false
             }
         }
+
+        case 'SET_CHECKING_PENDING': {
+            return {
+                ...state,
+                pending: true
+            }
+        }
+
         default:
             return state;
     }
@@ -90,7 +99,7 @@ export const setSearch = (SEARCH_END_POINT) => (dispatch, getState) => {
 }
 
 const getIPFSStatus = (url) => new Promise(resolve => {
-    axios.head(url)
+    axios.head(url, { timeout: 4 * 1000 })
         .then(data => {
             if (url.indexOf('localhost') !== -1 || url.indexOf('127.0.0.1') !== -1) {
                 resolve('local')
@@ -103,7 +112,7 @@ const getIPFSStatus = (url) => new Promise(resolve => {
 })
 
 const getCyberStatus = (url) => new Promise(resolve => {
-    axios.head(url + '/health')
+    axios.head(url + '/health', { timeout: 4 * 1000 })
         .then(data => {
             if (url.indexOf('localhost') !== -1 || url.indexOf('127.0.0.1') !== -1) {
                 resolve('local')
@@ -121,6 +130,8 @@ export const checkStatus = () => (dispatch, getState) => {
         PARITTY_END_POINT,
         SEARCH_END_POINT
     } = getState().settings;
+
+    dispatch({ type: 'SET_CHECKING_PENDING' })
 
     Promise.all([
         getIPFSStatus(IPFS_END_POINT),
