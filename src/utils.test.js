@@ -115,6 +115,9 @@ it('localhost dev mode -> port.dev', () => {
     expect(dura).toEqual('5600.dev/#/');
 })
 
+
+
+
 it(' ipfs hash -> correct dura', () => {
     const dura = utils.URLToDURA('http://earth.cybernode.ai:34402/ipfs/QmfBnoeaTX4YVFFWWrDsafSwEyXSoUtvypr77yBcsKqQYZ/#/', apps, 'http://earth.cybernode.ai:34402');
 
@@ -187,6 +190,12 @@ it('default.dev => localhost:5000', () => {
 
 
 
+
+it('new ', () => {
+    const dura = utils.URLToDURA('http://localhost:8080/ipfs/QmXoypizjW3WknFiJnKLwHCnL72vedxjQkDDP1mXWo6uco/wiki/', apps, 'http://localhost:8080');
+
+    expect(dura).toEqual('.wiki/wiki/');
+})
 
 
 

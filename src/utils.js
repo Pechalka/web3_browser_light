@@ -25,7 +25,7 @@ export const URLToDURA = (url, apps, IPFS_END_POINT = '') => {
         }
     }
 
-    if (url.indexOf('localhost') > 0) {
+    if (url.indexOf('localhost') > 0 && url.indexOf('ipfs') === -1) {
         const rawPort = url.split('localhost:')[1];
         const slashIndex = rawPort.indexOf('/');
 
