@@ -1,9 +1,15 @@
-import {init as initWallet} from './wallet';
+import {init as initWallet, getStatus } from './wallet';
+import axios from 'axios';
 
 let initState = {
     IPFS_END_POINT: 'http://earth.cybernode.ai:34402',
     PARITTY_END_POINT: 'http://localhost:8545',
-    SEARCH_END_POINT: 'http://earth.cybernode.ai:34657'
+    SEARCH_END_POINT: 'http://earth.cybernode.ai:34657',
+
+
+    ipfsStatus: 'fail',
+    ethNodeStatus: 'fail',
+    cyberNodeStatus: 'fail'
 }
 
 export const reducer = (state = initState, action) => {
@@ -31,6 +37,12 @@ export const reducer = (state = initState, action) => {
             return {
                 ...state,
                 SEARCH_END_POINT: action.payload
+            }
+        }
+        case 'SET_STATUS': {
+            return {
+                ...state,
+                ...action.payload
             }
         }
         default:
@@ -61,16 +73,69 @@ const saveSettingsInLS = () => (dispatch, getState) => {
 export const setIPFS = (IPFS_END_POINT) => (dispatch, getState) => {
     dispatch({type: 'SET_IPFS_END_POINT', payload: IPFS_END_POINT});
     dispatch(saveSettingsInLS());
+    dispatch(checkStatus());
 }
 
 export const setParity = (PARITTY_END_POINT) => (dispatch, getState) => {
     dispatch({type: 'SET_PARITTY_END_POINT', payload: PARITTY_END_POINT});
     dispatch(saveSettingsInLS());
     dispatch(initWallet(PARITTY_END_POINT));
+    dispatch(checkStatus());
 }
 
 export const setSearch = (SEARCH_END_POINT) => (dispatch, getState) => {
     dispatch({type: 'SET_SEARCH_END_POINT', payload: SEARCH_END_POINT});
     dispatch(saveSettingsInLS());
+    dispatch(checkStatus());
+}
+
+const getIPFSStatus = (url) => new Promise(resolve => {
+    axios.head(url)
+        .then(data => {
+            if (url.indexOf('localhost') !== -1 || url.indexOf('127.0.0.1') !== -1) {
+                resolve('local')
+            } else {
+                resolve('remote')
+            }
+        }).catch(e => {
+            resolve('fail')
+        })
+})
+
+const getCyberStatus = (url) => new Promise(resolve => {
+    axios.head(url + '/health')
+        .then(data => {
+            if (url.indexOf('localhost') !== -1 || url.indexOf('127.0.0.1') !== -1) {
+                resolve('local')
+            } else {
+                resolve('remote')
+            }
+        }).catch(e => {
+            resolve('fail')
+        })
+}) 
+
+export const checkStatus = () => (dispatch, getState) => {
+    const {
+        IPFS_END_POINT,
+        PARITTY_END_POINT,
+        SEARCH_END_POINT
+    } = getState().settings;
+
+    Promise.all([
+        getIPFSStatus(IPFS_END_POINT),
+        getStatus(PARITTY_END_POINT),
+        getCyberStatus(SEARCH_END_POINT)
+    ]).then(([ipfsStatus, ethNodeStatus, cyberNodeStatus]) => {
+        dispatch({
+            type: 'SET_STATUS',
+            payload: {
+                ipfsStatus,
+                ethNodeStatus,
+                cyberNodeStatus
+            }
+        })
+    })
+    
 }
 

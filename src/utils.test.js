@@ -189,9 +189,7 @@ it('default.dev => localhost:5000', () => {
 
 
 
-
-
-it('new ', () => {
+it('should correct work with local ipfs node ', () => {
     const dura = utils.URLToDURA('http://localhost:8080/ipfs/QmXoypizjW3WknFiJnKLwHCnL72vedxjQkDDP1mXWo6uco/wiki/', apps, 'http://localhost:8080');
 
     expect(dura).toEqual('.wiki/wiki/');

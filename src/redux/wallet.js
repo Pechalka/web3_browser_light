@@ -2,6 +2,8 @@ import Web3 from "web3";
 import SignerProvider from 'ethjs-provider-signer';
 import {sign} from 'ethjs-signer';
 
+import axios from 'axios';
+
 const initState = {
     accounts: [],
     defaultAccount: '',
@@ -174,6 +176,21 @@ export const sendMony = (_from, to, amount, _confirmationNumber = 3) => (dispatc
             resolve();
         }
     })
+})
+
+export const getStatus = (url) => new Promise((resolve) => {
+    axios.post(url, { "jsonrpc": "2.0", "id": 1, "method": "eth_protocolVersion", "params": [] })
+        .then(resonce => resonce.data)
+        .then(data => {
+            if (url.indexOf('localhost') !== -1 || url.indexOf('127.0.0.1') !== -1) {
+                resolve('local')
+            } else {
+                resolve('remote')
+            }
+        }).catch(e => {
+            resolve('fail')
+        })
+    // return eth.getProtocolVersion();
 })
 
 export const reject = () => (dispatch, getState) => {
