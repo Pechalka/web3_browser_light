@@ -3,7 +3,7 @@ import axios from 'axios';
 
 let initState = {
     IPFS_END_POINT: 'http://earth.cybernode.ai:34402',
-    PARITTY_END_POINT: 'http://localhost:8545',
+    PARITTY_END_POINT: 'http://earth.cybernode.ai:34645',
     SEARCH_END_POINT: 'http://earth.cybernode.ai:34657',
 
     pending: false,
@@ -148,5 +148,13 @@ export const checkStatus = () => (dispatch, getState) => {
         })
     })
     
+}
+
+export const resetAllSettings = () => (dispatch, getState) => {
+    localStorage.removeItem('settings');
+    localStorage.removeItem('rootRegistry');
+    localStorage.removeItem('appMenu');
+    dispatch(init());
+    dispatch(checkStatus());
 }
 

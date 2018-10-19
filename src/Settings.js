@@ -27,6 +27,17 @@ class Settings extends Component {
         this.props.checkStatus();
     }	
 
+    componentWillReceiveProps(nextProps) {
+        if (this.props.IPFS_END_POINT !== nextProps.IPFS_END_POINT ||
+        	this.props.PARITTY_END_POINT !== nextProps.PARITTY_END_POINT ||
+        	this.props.SEARCH_END_POINT !== nextProps.SEARCH_END_POINT) {
+
+            this.refs.IPFS_END_POINT.value = nextProps.IPFS_END_POINT;
+            this.refs.PARITTY_END_POINT.value = nextProps.PARITTY_END_POINT;
+            this.refs.SEARCH_END_POINT.value = nextProps.SEARCH_END_POINT;
+        }
+    }
+
 	render() {
 		const {
 			IPFS_END_POINT,
@@ -36,7 +47,9 @@ class Settings extends Component {
 			ipfsStatus,
 			ethNodeStatus,
 			cyberNodeStatus,
-			pending
+			pending,
+
+			resetAllSettings
 		} = this.props;
 
 		return (
@@ -67,7 +80,7 @@ class Settings extends Component {
 						<CybLink dura='rr.cyb'>root registry</CybLink>					
 					</div>
 					<div>
-						<button>reset all settings</button>
+						<button onClick={resetAllSettings}>reset all settings</button>
 					</div>
 				</div>
 			</Container>
