@@ -99,7 +99,7 @@ export const setSearch = (SEARCH_END_POINT) => (dispatch, getState) => {
 }
 
 const getIPFSStatus = (url) => new Promise(resolve => {
-    axios.head(url, { timeout: 4 * 1000 })
+    axios.get(url + '/ipfs/QmZfSNpHVzTNi9gezLcgq64Wbj1xhwi9wk4AxYyxMZgtCG', { timeout: 4 * 1000 })
         .then(data => {
             if (url.indexOf('localhost') !== -1 || url.indexOf('127.0.0.1') !== -1) {
                 resolve('local')
