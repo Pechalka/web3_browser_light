@@ -3,6 +3,7 @@
 	height: 100%;
 	display: flex;
 	flex-direction: column;
+	position: relative;
 }
 
 
@@ -15,7 +16,7 @@
 }
 
 .browser__loading {
-	position: fixed;
+	position: absolute;
 	display: none;
 	top: 0;
 	left: 0;
