@@ -154,6 +154,28 @@ export const approve = () => (dispatch, getState) => {
     })
 }
 
+export const sendMony = (_from, to, amount, _confirmationNumber = 3) => (dispatch, getState) => new Promise(resolve => {
+    console.log('send mony');
+    console.log(_from, to, amount, web3.utils.toWei(amount, "ether"))
+    eth.sendTransaction({ 
+        from: _from , 
+        to, 
+        value: web3.utils.toWei(amount, "ether"),
+        gas: 21000
+    }).on('transactionHash', function(hash){
+        console.log('transactionHash', hash);
+    })
+    .on('receipt', function(receipt){
+        console.log('receipt', receipt);
+    })
+    .on('confirmation', function(confirmationNumber, receipt){ 
+        console.log('confirmation', confirmationNumber, receipt);
+        if (confirmationNumber === _confirmationNumber) {
+            resolve();
+        }
+    })
+})
+
 export const reject = () => (dispatch, getState) => {
     dispatch(hidePending())
 }

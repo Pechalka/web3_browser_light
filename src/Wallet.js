@@ -2,9 +2,12 @@ import React, {Component} from 'react';
 
 import connect from "react-redux/es/connect/connect";
 import * as actions from "./redux/wallet";
+import Container from './components/Container/Container';
 
 class Wallet extends Component {
-
+    state = {
+        showSendPanel: false
+    }
     loadAccounts = () => {
         this.props.loadAccounts()
     }
@@ -31,11 +34,53 @@ class Wallet extends Component {
         this.props.setDefaultAccount(account.address);
     }
 
+    startSend = () => {
+        this.setState({
+            showSendPanel: true
+        })
+    }
+
+    cancelSend = () => {
+        this.setState({
+            showSendPanel: false
+        })
+    }
+
+    sendMony = () => {
+        const { defaultAccount } = this.props;
+        const recipientAddress = this.refs.recipientAddress.value;
+        const amount = this.refs.amount.value;
+        this.props.sendMony(defaultAccount, recipientAddress, amount)
+            .then(() => {
+                this.props.loadAccounts();
+            })
+        this.setState({
+            showSendPanel: false
+        })
+    }
+
     render() {
         const {accounts, defaultAccount} = this.props;
-
+        const { showSendPanel } = this.state;
         return (
-            <div>
+            <Container>
+                <div>current account</div>
+                {defaultAccount}
+                <div>
+                    {!showSendPanel && <div>
+                        <button onClick={this.startSend}>send</button>
+                    </div>}
+                    {showSendPanel && <div>
+                        <div>
+                            <input ref='recipientAddress' placeholder='Recipient Address'/>
+                        </div>
+                        <div>
+                            <input ref='amount' placeholder='Amount'/>
+                        </div>
+                        <button onClick={this.sendMony}>next</button>
+                        <button onClick={this.cancelSend}>cancel</button>
+                    </div>}
+                </div>
                 <h2>accounts</h2>
                 <div>
                     {accounts.map(account => {
@@ -56,7 +101,7 @@ class Wallet extends Component {
                     <button onClick={this.importKey}>import</button>
                     <input ref='importPrivateKey' placeholder='privatekey'/>
                 </div>
-            </div>
+            </Container>
         );
     }
 }
