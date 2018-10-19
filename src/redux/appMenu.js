@@ -28,6 +28,7 @@ const initState = {
             subItems: {}
         }
     ],
+    openMenu: false,
     pendingAddToFavorites: false,
 }
 
@@ -44,6 +45,14 @@ export const reducer = (state = initState, action) => {
             return {
                 ...state,
                 pendingAddToFavorites: action.payload,
+                openMenu: action.payload
+            }
+        }
+
+        case 'TOGGLE_MENU': {
+            return {
+                ...state,
+                openMenu: !state.openMenu
             }
         }
 
@@ -79,6 +88,8 @@ export const hideInput = () => (dispatch, getState) => {
         payload: false,
     })
 }
+
+export const toggleMenu = () => ({ type: 'TOGGLE_MENU' });
 
 export const deleteMenuItem = (rootDura) => (dispatch, getState) => {
     let menuItems = getState().appMenu.items;

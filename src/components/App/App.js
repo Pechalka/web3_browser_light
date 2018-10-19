@@ -16,8 +16,8 @@ export const AppContent = ({ children }) => (
 	</div>
 );
 
-const App = ({ children }) => (
-	<div className='app'>
+const App = ({ children, openMenu }) => (
+	<div className={`app ${openMenu ? 'app--open-menu' : ''}`}>
 		{children}
 	</div>
 );

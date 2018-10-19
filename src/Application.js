@@ -2,6 +2,7 @@ import React, {Component} from 'react';
 import {connect} from "react-redux";
 import {navigate, goBack} from './redux/browser';
 import {approve, reject} from './redux/wallet';
+import { toggleMenu } from './redux/appMenu';
 
 import AppMenu from './components/AppMenu/AppMenu';
 import AddToAppMenuButton, {Container} from "./components/AddToAppMenuButton/AddToAppMenuButton";
@@ -15,6 +16,7 @@ import ConfirmationPopup, {ApproveButton, RejectButton} from './components/Confi
 import CybLink from './components/CybLink';
 
 class Application extends Component {
+
     _handleKeyPress = (e) => {
         if (e.key === 'Enter') {
             const value = this.input.value;
@@ -36,12 +38,17 @@ class Application extends Component {
         this.props.reject();
     }
 
+
     render() {
-        const {dura, defaultAccount, pendingRequest, canBack, goBack } = this.props;
+        const {
+            dura, defaultAccount, pendingRequest, canBack, goBack, 
+            openMenu
+        } = this.props;
         const homePage = dura === '';
+
         return (
-            <App>
-                <AppMenu/>
+            <App openMenu={openMenu}>
+                <AppMenu openMenu={openMenu} />
                 {pendingRequest && <ConfirmationPopup>
                     <ApproveButton onClick={this.approve}>approve</ApproveButton>
                     <ApproveButton onClick={this.reject}>reject</ApproveButton>
@@ -50,6 +57,7 @@ class Application extends Component {
                     <Navigation isHome={homePage}>
                         <NavigationLeft>
                             <Logo/>
+                            <button onClick={this.props.toggleMenu}>menu</button>
                         </NavigationLeft>
                         <NavigationCenter>
                             <Container>
@@ -91,12 +99,14 @@ export default connect(
         dura: state.browser.dura,
         canBack: !!state.browser.backDura,
         pendingRequest: state.wallet.pendingRequest,
-        defaultAccount: state.wallet.defaultAccount
+        defaultAccount: state.wallet.defaultAccount,
+        openMenu: state.appMenu.openMenu
     }),
     {
         navigate,
         approve,
         reject,
-        goBack
+        goBack,
+        toggleMenu
     }
 )(Application);

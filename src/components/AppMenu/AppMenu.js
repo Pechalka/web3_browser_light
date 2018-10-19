@@ -25,6 +25,8 @@ class AppMenu extends Component {
     }
 
     render() {
+        const { openMenu } = this.props;
+
         const deleteAppFromMenu = (rootDura) => {
             this.props.deleteMenuItem(rootDura);
         };
@@ -41,7 +43,7 @@ class AppMenu extends Component {
         const pendingAddToFavorites = this.props.pendingAddToFavorites;
 
         return (
-            <div className='menuContainer'>
+            <div className={`menuContainer ${!openMenu ? 'menuContainer--hide' : ''}`}>
                 <div className='appMenu'>
                     {appMenuItems}
                 </div>

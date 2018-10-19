@@ -116,8 +116,8 @@ export const navigate = (_dura, init = false) => (dispatch, getState) => {
             loading: false
         }
     })
-    if (!init)
-        hashHistory.push('/browser');
+
+    hashHistory.push('/browser');
 }
 
 export const willNavigate = (url) => (dispatch, getState) => {

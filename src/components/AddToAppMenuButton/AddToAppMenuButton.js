@@ -4,6 +4,12 @@ import * as actions from '../../redux/appMenu'
 
 const styles = require('./AddToAppMenuButton.css');
 
+export const Container = ({children}) => (
+    <div className='favoritesContainer'>
+        {children}
+    </div>
+)
+
 class AddToAppMenuButton extends Component {
 
     _onclick = () => {
@@ -34,11 +40,7 @@ class AddToAppMenuButton extends Component {
     }
 }
 
-export const Container = ({children}) => (
-    <div className='favoritesContainer'>
-        {children}
-    </div>
-)
+
 
 export default connect(
     state => ({

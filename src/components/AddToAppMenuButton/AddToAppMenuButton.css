@@ -10,7 +10,7 @@
 .favoritedPage {
     font-size: 30px;
     padding: 5px;
-    position: absolute;
+    position: fixed;
     top: 0;
     right: 0;
     cursor: pointer;
