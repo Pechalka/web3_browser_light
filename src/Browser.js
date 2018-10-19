@@ -4,9 +4,12 @@ import {connect} from "react-redux";
 import {didNavigateInPage, willNavigate} from "./redux/browser";
 import {receiveMessage} from './redux/wallet';
 import {getPreloadPath} from "./utils";
+import BrowserWindow, { BrowserContainer, Loading } from './components/BrowserWindow/BrowserWindow';
 
 class Browser extends Component {
-
+    state = {
+        loading: false
+    }
     handleWebview = webview => {
         if (!webview) {
             return;
@@ -29,25 +32,30 @@ class Browser extends Component {
         webview.addEventListener('ipc-message', (e) => {
             this.props.receiveMessage(e);
         });
+
+        webview.addEventListener('did-start-loading', (e) => {
+            this.setState({ loading: true })
+        });
+
+        webview.addEventListener('did-stop-loading', (e) => {
+            this.setState({ loading: false })
+        });
     }
 
 
     render() {
-        const {loading, url} = this.props;
-
+        const { url} = this.props;
+        const { loading } = this.state;
         return (
-            <div className='app'>
-                <webview
+            <BrowserContainer>
+                <BrowserWindow
                     preload={`${getPreloadPath()}`}
                     src={url}
-                    ref={this.handleWebview}
-                    className={`app__content ${loading ? 'app__content--hidden' : ''}`}
+                    refFn={this.handleWebview}
+                    loading={loading}
                 />
-                <div
-                    className={`app__content ${loading ? '' : 'app__content--hidden'}`}
-                >loading...
-                </div>
-            </div>
+                <Loading loading={loading}/>
+            </BrowserContainer>
         );
     }
 }
