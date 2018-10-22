@@ -27,11 +27,12 @@ class CurrentUser extends Component {
 	render() {
 		const { open } = this.state;
 
-		const { defaultAccount } = this.props;
+		const { defaultAccount, cyberDefaultAccount } = this.props;
 		return (
 			<div className='id-bar__user user-popup__container' onClick={this.toggle}>
 				<div className={`user-popup ${open ? 'user-popup--open' : ''}`}>
-					{defaultAccount}
+					<div>ETH = {defaultAccount}</div>
+					<div>CYBER = {cyberDefaultAccount} </div>
 				</div>
 			</div>
 		);

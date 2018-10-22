@@ -2,6 +2,7 @@ import React, {Component} from 'react';
 
 import connect from "react-redux/es/connect/connect";
 import * as actions from "./redux/wallet";
+import * as cyberActions from './redux/cyber'
 import Container from './components/Container/Container';
 
 class Wallet extends Component {
@@ -47,7 +48,7 @@ class Wallet extends Component {
     }
 
     sendMony = () => {
-        const { defaultAccount } = this.props;
+        const {defaultAccount} = this.props;
         const recipientAddress = this.refs.recipientAddress.value;
         const amount = this.refs.amount.value;
         this.props.sendMony(defaultAccount, recipientAddress, amount)
@@ -61,7 +62,7 @@ class Wallet extends Component {
 
     render() {
         const {accounts, defaultAccount} = this.props;
-        const { showSendPanel } = this.state;
+        const {showSendPanel} = this.state;
         return (
             <Container>
                 <div>current account</div>
@@ -106,10 +107,93 @@ class Wallet extends Component {
     }
 }
 
-export default connect(
+Wallet = connect(
     ({wallet}) => ({
         accounts: wallet.accounts,
         defaultAccount: wallet.defaultAccount
     }),
     actions
 )(Wallet);
+
+class CyberWallet extends Component {
+    importAccount = () => {
+        const privateKey = this.refs.privateKeyInput.value;
+        this.props.importAccount(privateKey);
+    }
+
+    restoreAccount = () => {
+        const seedPhrase = this.refs.recoverInput.value;
+        this.props.restoreAccount(seedPhrase);
+    }
+
+    setDefaultAccount = (account) => {
+        this.props.setDefaultCyberAccount(account.address);
+    }
+
+    render() {
+        return (
+            <div>
+                <div>
+                    {this.props.accounts.map(account =>
+                        <div onClick={() => this.setDefaultAccount(account)} key={account.address}>
+                            <div>
+                                address: {account.address}
+                            </div>
+                            <div>
+                                balance: {account.balance}
+                            </div>
+                        </div>)
+                    }
+                    <hr/>
+                    <button onClick={this.createAccount}>Create new account</button>
+                    <div>
+                        <p>Recover</p>
+                        <input ref='recoverInput' placeholder='seed for recover'/>
+                        <button onClick={this.restoreAccount}>recover</button>
+                    </div>
+                    <div>
+                        <p>Import</p>
+                        <input ref='privateKeyInput' placeholder='private key for import'/>
+                        <button onClick={this.importAccount}>import</button>
+                    </div>
+                </div>
+            </div>
+        );
+    }
+}
+
+CyberWallet = connect(
+    ({cyber}) => ({
+        accounts: cyber.accounts
+    }),
+    cyberActions
+)(CyberWallet);
+
+
+class Page extends Component {
+    state = {
+        tab: 'cyb'
+    }
+    selec = (tab) => {
+        this.setState({tab});
+    }
+
+    render() {
+        const {tab} = this.state;
+        return (
+            <div>
+                <Container>
+                    <button onClick={() => this.selec('eth')}>eth</button>
+                    <button onClick={() => this.selec('cyb')}>cyb</button>
+                </Container>
+                <Container>
+                    {tab === 'eth' && <Wallet/>}
+                    {tab === 'cyb' && <CyberWallet/>}
+                </Container>
+            </div>
+        );
+    }
+}
+
+
+export default Page;

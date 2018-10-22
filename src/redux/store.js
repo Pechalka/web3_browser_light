@@ -26,6 +26,10 @@ import {
     init as initAppMenu
 } from './appMenu';
 
+import {
+    reducer as cyberReducer,
+    init as initCyber,
+} from './cyber';
 
 const rootReducer = combineReducers({
     browser: browserReducer,
@@ -33,6 +37,7 @@ const rootReducer = combineReducers({
     settings: settingReducer,
     rootRegistry: rootRegistryReducer,
     appMenu: appMenuReducer,
+    cyber: cyberReducer,
 });
 const store = createStore(rootReducer, applyMiddleware(thunk));
 
@@ -43,6 +48,7 @@ export const appStart = () => new Promise( resolve => {
         store.dispatch(initWallet(PARITTY_END_POINT));
         store.dispatch(initAppMenu());
         store.dispatch(initBrowser(IPFS_END_POINT));
+        store.dispatch(initCyber());
         resolve();
     })
 })

@@ -4,7 +4,7 @@ import axios from 'axios';
 let initState = {
     IPFS_END_POINT: 'http://earth.cybernode.ai:34402',
     PARITTY_END_POINT: 'http://earth.cybernode.ai:34645',
-    SEARCH_END_POINT: 'http://earth.cybernode.ai:34657',
+    SEARCH_END_POINT: 'http://earth.cybernode.ai:34660',
 
     pending: false,
     ipfsStatus: 'fail',
@@ -122,7 +122,7 @@ const getCyberStatus = (url) => new Promise(resolve => {
         }).catch(e => {
             resolve('fail')
         })
-}) 
+})
 
 export const checkStatus = () => (dispatch, getState) => {
     const {
@@ -147,7 +147,7 @@ export const checkStatus = () => (dispatch, getState) => {
             }
         })
     })
-    
+
 }
 
 export const resetAllSettings = () => (dispatch, getState) => {

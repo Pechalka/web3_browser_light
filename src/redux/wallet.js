@@ -1,6 +1,7 @@
 import Web3 from "web3";
 import SignerProvider from 'ethjs-provider-signer';
 import {sign} from 'ethjs-signer';
+import Cyber from '../cyber/Cyber'
 
 import axios from 'axios';
 
@@ -51,6 +52,10 @@ let web3;
 
 let __accounts = {};
 
+//let cyber;
+
+window.cyber = null;
+
 export const init = (endpoint) => (dispatch, getState) => {
     __accounts = JSON.parse(localStorage.getItem('accounts') || '{}');
 
@@ -71,6 +76,8 @@ export const init = (endpoint) => (dispatch, getState) => {
         const address = Object.keys(__accounts)[0];
         dispatch(setDefaultAccount(address))
     }
+
+    window.cyber = new Cyber(getState().settings.SEARCH_END_POINT)
 }
 
 export const loadAccounts = () => (dispatch, getState) => {
@@ -159,27 +166,27 @@ export const approve = () => (dispatch, getState) => {
 export const sendMony = (_from, to, amount, _confirmationNumber = 3) => (dispatch, getState) => new Promise(resolve => {
     console.log('send mony');
     console.log(_from, to, amount, web3.utils.toWei(amount, "ether"))
-    eth.sendTransaction({ 
-        from: _from , 
-        to, 
+    eth.sendTransaction({
+        from: _from,
+        to,
         value: web3.utils.toWei(amount, "ether"),
         gas: 21000
-    }).on('transactionHash', function(hash){
+    }).on('transactionHash', function (hash) {
         console.log('transactionHash', hash);
     })
-    .on('receipt', function(receipt){
-        console.log('receipt', receipt);
-    })
-    .on('confirmation', function(confirmationNumber, receipt){ 
-        console.log('confirmation', confirmationNumber, receipt);
-        if (confirmationNumber === _confirmationNumber) {
-            resolve();
-        }
-    })
+        .on('receipt', function (receipt) {
+            console.log('receipt', receipt);
+        })
+        .on('confirmation', function (confirmationNumber, receipt) {
+            console.log('confirmation', confirmationNumber, receipt);
+            if (confirmationNumber === _confirmationNumber) {
+                resolve();
+            }
+        })
 })
 
 export const getStatus = (url) => new Promise((resolve) => {
-    axios.post(url, { "jsonrpc": "2.0", "id": 1, "method": "eth_protocolVersion", "params": [] }, { timeout: 4 * 1000 })
+    axios.post(url, {"jsonrpc": "2.0", "id": 1, "method": "eth_protocolVersion", "params": []}, {timeout: 4 * 1000})
         .then(resonce => resonce.data)
         .then(data => {
             if (url.indexOf('localhost') !== -1 || url.indexOf('127.0.0.1') !== -1) {
@@ -188,8 +195,8 @@ export const getStatus = (url) => new Promise((resolve) => {
                 resolve('remote')
             }
         }).catch(e => {
-            resolve('fail')
-        })
+        resolve('fail')
+    })
     // return eth.getProtocolVersion();
 })
 
@@ -213,6 +220,16 @@ export const receiveMessage = (e) => (dispatch, getState) => {
                 wv.send('web3_eth_call', {...payload, ...result});
             })
         }
+    }
+    if (e.channel === 'cyber') {
 
+        const method = e.args[0].method;
+        const params = e.args[0].params;
+
+        const wvCyber = e.target;
+        window.cyber[method].apply(window.cyber, params).then((result) => {
+            wvCyber.send('cyber_'+method, result);
+        });
+        console.log('e---->', e);
     }
 }

@@ -41,8 +41,8 @@ class Application extends Component {
 
     render() {
         const {
-            dura, defaultAccount, pendingRequest, canBack, goBack, 
-            openMenu
+            dura, defaultAccount, pendingRequest, canBack, goBack,
+            openMenu, cyberDefaultAccount
         } = this.props;
         const homePage = dura === '';
 
@@ -81,7 +81,7 @@ class Application extends Component {
                             <IdBar>
                                 <SettingsLink/>
                                 <WalletLink/>
-                                <CurrentUser defaultAccount={defaultAccount}/>
+                                <CurrentUser defaultAccount={defaultAccount} cyberDefaultAccount={cyberDefaultAccount} />
                             </IdBar>
                         </NavigationRight>
                     </Navigation>
@@ -100,7 +100,8 @@ export default connect(
         canBack: !!state.browser.backDura,
         pendingRequest: state.wallet.pendingRequest,
         defaultAccount: state.wallet.defaultAccount,
-        openMenu: state.appMenu.openMenu
+        openMenu: state.appMenu.openMenu,
+        cyberDefaultAccount: state.cyber.defaultAccount,
     }),
     {
         navigate,
